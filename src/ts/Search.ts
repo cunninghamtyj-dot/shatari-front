@@ -380,7 +380,7 @@ function createRow(
         td.className = 'price';
         const rowLink = document.createElement('a') as WowheadAnchor;
         const price = item.price;
-        if (price) {
+        if (price || restricted) {
             td.appendChild(restricted ? createRestricted(priceElement(123456)) : priceElement(price));
 
             let vsp;
@@ -710,6 +710,7 @@ async function showItemList(itemsList: Types.PricedItem[], includeNeverSeen: boo
     const showOutOfStock = !paid || !arbitrage && (qs('.main .search-bar .filter [name="out-of-stock"]') as HTMLInputElement).checked;
     const vendorFlip = paid && !arbitrage && (qs('.main .search-bar .filter [name="vendor-flip"]') as HTMLInputElement).checked;
     const bonusStat = Categories.getBonusStat();
+    const showingRedactedStatsList = !paid && bonusStat != null;
 
     let itemKeyAllowList;
     if (bonusStat != null) {
@@ -782,7 +783,7 @@ async function showItemList(itemsList: Types.PricedItem[], includeNeverSeen: boo
             if (!showOutOfStock) {
                 continue;
             }
-            if (!includeNeverSeen && (item.price || 0) === 0) {
+            if (!includeNeverSeen && (item.price || 0) === 0 && !showingRedactedStatsList) {
                 continue;
             }
         }

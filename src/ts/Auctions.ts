@@ -11,6 +11,7 @@ import {stringifyKeyParts, Modifier} from "./Items";
 import Progress from "./Progress";
 import Realms from "./Realms";
 import * as Types from "./Types";
+import {isPaid} from "./Account";
 
 /** Realm IDs used by commodity realms for each region. */
 const COMMODITY_REALMS: Record<Types.Region, Types.ConnectedRealmID> = {
@@ -607,8 +608,9 @@ async function getRealmState(realm: Types.Realm): Promise<Types.RealmState> {
 
     let response: Response;
     let commodityRealmState: Types.RealmState|null;
+    const filename = isPaid() ? 'state.bin' : 'state.free.bin';
     [response, commodityRealmState] = await Promise.all([
-        Progress.fetch(`data/${realm.connectedId}/state.bin`, {mode: 'same-origin'}),
+        Progress.fetch(`data/${realm.connectedId}/${filename}`, {mode: 'same-origin'}),
         isCommodityRealm ? Promise.resolve(null) : getRealmState(getCommodityRealm(realm.region)),
     ]);
 
