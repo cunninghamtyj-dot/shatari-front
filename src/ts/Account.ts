@@ -16,10 +16,6 @@ let user: User|null;
 let filterButton: HTMLAnchorElement;
 let welcomeElement: HTMLDivElement|null;
 
-function isEnabled(): boolean {
-    return location.hostname === 'undermine.exchange' || localStorage.getItem('account') != null;
-}
-
 export const showBenefitsText = (event?: MouseEvent) => {
     event && event.preventDefault();
 
@@ -31,13 +27,9 @@ export const showBenefitsText = (event?: MouseEvent) => {
     welcomeElement && welcomeElement.scrollIntoView();
 };
 
-export const isPaid = (): boolean => !isEnabled() || !!user?.paid;
+export const isPaid = (): boolean => !!user?.paid;
 
 export async function init(): Promise<void> {
-    if (!isEnabled()) {
-        return;
-    }
-
     welcomeElement = qs('.welcome .account') as HTMLDivElement;
     welcomeElement && (welcomeElement.style.display = '');
     filterButton = qs('.main .search-bar .filter') as HTMLAnchorElement;
