@@ -273,6 +273,12 @@
                         } catch (e) {
                             blockquote.textContent = e.message;
                         }
+
+                        if (response.ok) {
+                            form.querySelectorAll('input[data-param-name]')
+                                .forEach(used => document.querySelectorAll(`input[data-param-name="${used.dataset.paramName}"]`)
+                                    .forEach(other => other.value = used.value));
+                        }
                     };
 
                     form.addEventListener('submit', event => {
