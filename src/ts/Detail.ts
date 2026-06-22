@@ -21,7 +21,7 @@ import Search from "./Search";
 import * as Types from "./Types";
 import {isPaid, showBenefitsText} from "./Account";
 
-declare const Highcharts: any;
+declare const Highcharts: typeof import('highcharts/highstock');
 
 const BREED_STATS: Record<number, Types.BattlePetStats> = {
     3:  {stamina: 0.5, power: 0.5, speed: 0.5},
@@ -930,8 +930,8 @@ async function populateDetails(item: Types.Item, itemState: Types.ItemState) {
             maxPrice = Math.min(maxPrice, p95 * 1.1);
         }
 
-        const priceFormatter = (point: {value: Types.Money}): string => {
-            let money = point.value / COPPER_SILVER;
+        const priceFormatter: Highcharts.AxisLabelsFormatterCallbackFunction = (point): string => {
+            let money: Types.Money = (point.value as Types.Money) / COPPER_SILVER;
             let suffix = 's';
             if (money >= (COPPER_GOLD / COPPER_SILVER)) {
                 money /= (COPPER_GOLD / COPPER_SILVER);
@@ -982,7 +982,7 @@ async function populateDetails(item: Types.Item, itemState: Types.ItemState) {
             }),
         };
 
-        const priceSeries = {
+        const priceSeries: Highcharts.SeriesOptionsType = {
             data: priceData,
             fillColor: 'rgba(136,136,255,0.5)',
             lineColor: '#8888FF',
@@ -997,9 +997,9 @@ async function populateDetails(item: Types.Item, itemState: Types.ItemState) {
             type: 'area',
             zIndex: 5,
         };
-        const quantitySeries = {
+        const quantitySeries: Highcharts.SeriesOptionsType = {
             data: quantityData,
-            lineColor: '#BB5555',
+            color: '#BB5555',
             marker: {
                 states: {
                     hover: {
@@ -1012,17 +1012,19 @@ async function populateDetails(item: Types.Item, itemState: Types.ItemState) {
             yAxis: 1,
             zIndex: 10,
         };
-
-        Highcharts.stockChart(highchartParent, {
+        Highcharts.stockChart({
             accessibility: {enabled: false},
             chart: {
                 backgroundColor: 'rgba(0,0,0,0)',
                 height: withTimes ? 325 : 400,
+                renderTo: highchartParent,
                 style: {
                     fontFamily: 'inherit',
                     fontSize: 'inherit',
                 },
-                zoomType: 'x',
+                zooming: {
+                    type: 'x',
+                },
             },
             credits: {
                 style: {
@@ -1104,11 +1106,11 @@ async function populateDetails(item: Types.Item, itemState: Types.ItemState) {
                 backgroundColor: '#282322',
                 borderColor: '#777',
                 borderRadius: 4,
-                formatter: function (this: {x: number, points: {x: number, y: number}[]}) {
+                formatter: function () {
                     const result = ce('div');
-                    result.appendChild(ct(dateFormatter.format(new Date(this.x))));
+                    result.appendChild(ct(dateFormatter.format(new Date(this.x as number))));
 
-                    if (this.points[1].y) {
+                    if (this.points?.[1].y) {
                         result.appendChild(ce('br'));
                         result.appendChild(ce(
                             'span',
@@ -1124,7 +1126,7 @@ async function populateDetails(item: Types.Item, itemState: Types.ItemState) {
                         {style: {color: '#DD6666'}},
                         ct((strings.quantityTooltip || strings.quantity) + ': ')
                     ));
-                    result.appendChild(ct(this.points[0].y.toLocaleString()));
+                    result.appendChild(ct(this.points?.[0].y?.toLocaleString() ?? ''));
 
                     return result.innerHTML;
                 },
@@ -1138,15 +1140,16 @@ async function populateDetails(item: Types.Item, itemState: Types.ItemState) {
             },
             xAxis: {
                 labels: {
-                    formatter: (context: {value: number, tickPositionInfo: {unitName: string}}) => ({
+                    formatter: context => ({
+                        millisecond: labelFormatter.minute.format(new Date(context.value)),
                         second: labelFormatter.minute.format(new Date(context.value)),
                         minute: labelFormatter.minute.format(new Date(context.value)),
                         hour: labelFormatter.minute.format(new Date(context.value)),
                         day: labelFormatter.day.format(new Date(context.value)),
                         week: labelFormatter.day.format(new Date(context.value)),
                         month: labelFormatter.month.format(new Date(context.value)),
-                        year: Highcharts.dateFormat('%Y', context.value),
-                    }[context.tickPositionInfo.unitName].replace(/\s/g, NBSP)),
+                        year: Highcharts.dateFormat('%Y', context.value as number),
+                    }[context.tickPositionInfo?.unitName ?? 'day'].replace(/\s/g, NBSP)),
                     style: {
                         color: '#CCCCCC',
                         fontSize: 'inherit',
@@ -1181,7 +1184,7 @@ async function populateDetails(item: Types.Item, itemState: Types.ItemState) {
                 gridLineWidth: 0,
                 labels: {
                     enabled: addAxisLabels,
-                    formatter: (point: {value: number}) => point.value.toLocaleString(),
+                    formatter: point => point.value.toLocaleString(),
                     style: {
                         color: '#CCCCCC',
                         fontSize: 'inherit',
