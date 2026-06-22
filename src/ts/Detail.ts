@@ -1012,10 +1012,78 @@ async function populateDetails(item: Types.Item, itemState: Types.ItemState) {
             yAxis: 1,
             zIndex: 10,
         };
+        let rescaleTimer: number|undefined;
+        const rescaleYAxes = (chart: Highcharts.Chart, windowMin: number, windowMax: number) => {
+            let indexMin: number;
+            {
+                const xData = chart.yAxis[0].series[0].xData ?? [];
+                let low = 0;
+                let high = xData.length - 1;
+                while (low <= high) {
+                    const mid = Math.floor((high - low) / 2) + low;
+                    if (xData[mid] < windowMin) {
+                        low = mid + 1;
+                    } else if (xData[mid] > windowMin) {
+                        high = mid - 1;
+                    } else {
+                        low = mid + 1;
+                        break;
+                    }
+                }
+
+                indexMin = Math.max(0, low - 1);
+            }
+
+            [
+                {yAxis: chart.yAxis[0], cutOutliers: true},  // Main price area
+                {yAxis: chart.yAxis[1], cutOutliers: false}, // Quantity
+                {yAxis: chart.yAxis[2], cutOutliers: true},  // Price in lower zoom/span area
+            ].forEach(({yAxis, cutOutliers}) => {
+                if (!yAxis) {
+                    return;
+                }
+                const values: number[] = [];
+                let maxValue: number = 0;
+                const series = yAxis.series[0];
+                const xData = series.xData ?? [];
+                const yData = series.yData ?? [];
+
+                for (let i = indexMin; i < xData.length; i++) {
+                    if (xData[i] > windowMax) {
+                        break;
+                    }
+                    if (xData[i] >= windowMin) {
+                        const value = yData[i];
+                        if (value) {
+                            cutOutliers && values.push(value);
+                            if (value > maxValue) {
+                                maxValue = value;
+                            }
+                        }
+                    }
+                }
+
+                if (maxValue > 0) {
+                    if (cutOutliers) {
+                        values.sort((a, b) => a - b);
+                        const p95 = values[Math.floor(values.length * 0.95)];
+                        maxValue = Math.min(maxValue, p95 * 1.1);
+                    }
+                    yAxis.setExtremes(0, maxValue);
+                }
+            });
+        };
+
         Highcharts.stockChart({
             accessibility: {enabled: false},
             chart: {
                 backgroundColor: 'rgba(0,0,0,0)',
+                events: {
+                    load() {
+                        const extremes = this.xAxis[0].getExtremes();
+                        rescaleYAxes(this, extremes.min, extremes.max);
+                    },
+                },
                 height: withTimes ? 325 : 400,
                 renderTo: highchartParent,
                 style: {
@@ -1139,6 +1207,13 @@ async function populateDetails(item: Types.Item, itemState: Types.ItemState) {
                 }
             },
             xAxis: {
+                events: {
+                    afterSetExtremes: function (e) {
+                        clearTimeout(rescaleTimer);
+                        const chart = this.chart;
+                        rescaleTimer = setTimeout(() => rescaleYAxes(chart, e.min, e.max), 100);
+                    },
+                },
                 labels: {
                     formatter: context => ({
                         millisecond: labelFormatter.minute.format(new Date(context.value)),
