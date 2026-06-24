@@ -727,7 +727,7 @@ async function populateDetails(item: Types.Item, itemState: Types.ItemState) {
             itemName += ' (' + item.bonusLevel + ')';
             wowheadParams.push('ilvl=' + item.bonusLevel);
         }
-        const nameLink = ce('a', {}, ct(itemName));
+        const nameLink: WowheadAnchor = ce('a', {}, ct(itemName));
         namePanel.appendChild(nameLink);
 
         if (item.id === ITEM_PET_CAGE) {
@@ -743,6 +743,9 @@ async function populateDetails(item: Types.Item, itemState: Types.ItemState) {
             .replace(/^-+|-+$/g, '');
         if (wowheadParams.length) {
             nameLink.dataset.wowhead = wowheadParams.join('&');
+            if (wowheadParams.some(param => param.startsWith('ilvl='))) {
+                nameLink._fixTooltip = html => html.replace(/<br>[^<]+<!--rlvl-->\d+/, '');
+            }
         }
 
         if (item.craftingQualityId) {
