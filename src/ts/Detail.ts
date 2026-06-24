@@ -744,7 +744,7 @@ async function populateDetails(item: Types.Item, itemState: Types.ItemState) {
         if (wowheadParams.length) {
             nameLink.dataset.wowhead = wowheadParams.join('&');
             if (wowheadParams.some(param => param.startsWith('ilvl='))) {
-                nameLink._fixTooltip = html => html.replace(/<br>[^<]+<!--rlvl-->\d+/, '');
+                nameLink._fixTooltip = html => html.replace(/[^<>]*<!--rlvl-->\d+[^<>]*(<br>)?/, '');
             }
         }
 

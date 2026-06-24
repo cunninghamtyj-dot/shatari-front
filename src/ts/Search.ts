@@ -406,7 +406,7 @@ function createRow(
                     rowLink.dataset.wowhead += `&ilvl=${item.bonusLevel}`;
                     const oldFix = rowLink._fixTooltip;
                     rowLink._fixTooltip = (html: string, type: number, typeId: string, element: HTMLAnchorElement) =>
-                        (oldFix?.(html, type, typeId, element) ?? html).replace(/<br>[^<]+<!--rlvl-->\d+/, '');
+                        (oldFix?.(html, type, typeId, element) ?? html).replace(/[^<>]*<!--rlvl-->\d+[^<>]*(<br>)?/, '');
                 }
                 if (suffix && suffix.bonus) {
                     rowLink.dataset.wowhead += `&bonus=${suffix.bonus}`;
