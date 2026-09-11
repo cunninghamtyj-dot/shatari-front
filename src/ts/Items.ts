@@ -158,6 +158,13 @@ export function getIconUrl(iconName: string, size: IconSize) {
 }
 
 /**
+ * Returns the full URL to a socket icon image.
+ */
+export function getSocketUrl(socketFileName: string) {
+    return `https://wow.zamimg.com/images/icons/${socketFileName}`;
+}
+
+/**
  * Returns the Item record for the item with the given key on the given/current realm.
  */
 export function getItemByKey(itemKey: Types.ItemKey): Types.Item|null {

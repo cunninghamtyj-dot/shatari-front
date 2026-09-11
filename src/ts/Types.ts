@@ -30,6 +30,8 @@ export type AuctionDetail = {
     price: Money;
     // List of unique tertiary stat IDs
     stats: number[];
+    // List of socket type IDs from bonuses
+    sockets: number[];
 }
 export type BattlePetStats = {
     power: number;

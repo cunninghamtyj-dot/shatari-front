@@ -52,6 +52,7 @@ type CachedSnapshotList = CachedState & {
 };
 type ModuleVars = {
     bonusToStats: Record<number, number[]>|undefined;
+    bonusToSockets: Record<number, number[]>|undefined;
     lastCommodityRealmState: CachedRealmState|undefined;
     lastRealmState: CachedRealmState|undefined;
     lastRegionState: CachedRegionState|undefined;
@@ -60,6 +61,7 @@ type ModuleVars = {
 
 const my: ModuleVars = {
     bonusToStats: undefined,
+    bonusToSockets: undefined,
     lastCommodityRealmState: undefined,
     lastRealmState: undefined,
     lastRegionState: undefined,
@@ -414,6 +416,23 @@ async function getBonusToStats(): Promise<Record<number, number[]>> {
 }
 
 /**
+ * Returns the map of bonus ID => socket IDs.
+ */
+async function getBonusToSockets(): Promise<Record<number, number[]>> {
+    if (my.bonusToSockets) {
+        return my.bonusToSockets;
+    }
+
+    const response = await Progress.fetch('json/bonusToSockets.json', {mode: 'same-origin'});
+
+    if (!response.ok) {
+        throw 'Cannot get map of bonus to sockets!';
+    }
+
+    return my.bonusToSockets = await response.json();
+}
+
+/**
  * Returns a fake Realm object for the commodity realm used by the given region.
  */
 function getCommodityRealm(region: Types.Region): Types.Realm {
@@ -499,6 +518,7 @@ async function getItemState(realm: Types.Realm, item: Types.Item, useCached: boo
     result.auctions.sort((a, b) => a.price - b.price);
 
     const bonusToStats = await getBonusToStats();
+    const bonusToSockets = await getBonusToSockets();
     for (let remaining = view.getUint16(read(2), true); remaining > 0; remaining--) {
         let price = view.getUint32(read(4), true) * COPPER_SILVER;
         let modifiers: Record<number, number> = {};
@@ -519,13 +539,18 @@ async function getItemState(realm: Types.Realm, item: Types.Item, useCached: boo
             bonuses.push(view.getUint16(read(2), true));
         }
         bonuses.sort((a, b) => a - b);
-        let stats: Set<number> = new Set();
-        bonuses.forEach(bonus => bonusToStats[bonus]?.forEach(stat => stats.add(stat)));
+        const stats: Set<number> = new Set();
+        const sockets: number[] = [];
+        bonuses.forEach(bonus => {
+            bonusToStats[bonus]?.forEach(stat => stats.add(stat));
+            sockets.push(...(bonusToSockets[bonus] ?? []));
+        });
         result.specifics.push({
             price: price,
             modifiers: modifiers,
             bonuses: bonuses,
             stats: Array.from(stats.values()),
+            sockets,
         });
     }
     result.specifics.sort((a, b) => a.price - b.price);

@@ -55,6 +55,39 @@ const STAT_TO_ICON: Record<Types.StatID, string> = {
     64: 'spell_magic_greaterblessingofkings', // Indestructible
 };
 
+const SOCKET_TO_ICON: Record<number, string> = {
+    1: 'socket-meta.gif',
+    2: 'socket-red.gif',
+    3: 'socket-yellow.gif',
+    4: 'socket-blue.gif',
+    5: 'socket-hydraulic.gif',
+    6: 'socket-cogwheel.gif',
+    7: 'socket-prismatic.gif',
+    8: 'relic-iron.png',
+    9: 'relic-blood.png',
+    10: 'relic-shadow.png',
+    11: 'relic-fel.png',
+    12: 'relic-arcane.png',
+    13: 'relic-frost.png',
+    14: 'relic-fire.png',
+    15: 'relic-water.png',
+    16: 'relic-life.png',
+    17: 'relic-storm.png',
+    18: 'relic-holy.png',
+    19: 'socket-red.gif',
+    20: 'socket-yellow.gif',
+    21: 'socket-blue.gif',
+    22: 'socket-domination.gif',
+    // 23: crystallic
+    24: 'socket-tinker.gif',
+    25: 'socket-primordial.gif',
+    // 26: fragrance
+    27: 'socket-singing-thunder.gif',
+    28: 'socket-singing-sea.gif',
+    29: 'socket-singing-wind.gif',
+    // 30: fiber
+};
+
 type ModuleVars = {
     everScrolled: boolean;
 }
@@ -631,6 +664,17 @@ function populateAuctions(item: Types.Item, itemState: Types.ItemState) {
 
                 statIcons.appendChild(icon);
             });
+        specLine.sockets.forEach(socketType => {
+            const iconName = SOCKET_TO_ICON[socketType] ?? SOCKET_TO_ICON[7]; // Prismatic
+            if (!iconName) {
+                return;
+            }
+
+            const icon = ce('span', {className: 'icon'});
+            icon.style.backgroundImage = 'url("' + Items.getSocketUrl(iconName) + '")';
+
+            statIcons.appendChild(icon);
+        });
         switch (statIcons.children.length) {
             case 0:
                 break;
