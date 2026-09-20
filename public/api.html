@@ -1674,7 +1674,8 @@
                     <tr><th>Access</th><td>Paid <span class="paid-only">✅️</span><span class="free-only">⛔ <a href="https://www.patreon.com/erorus/membership">Become a patron!</a></span><span class="logged-out-only">⚠️</span></td></tr>
                 </table>
                 <p>Same as Now Item Detail, but for a specific non-commodity item + level.</p>
-                <p>The auction list has a separate entry for each individual item (instead of grouping by price), and also includes item modifiers, bonuses, and tertiary stats, when present.</p>
+                <p>The auction list has a separate entry for each individual item (instead of grouping by price), and also includes item modifiers, bonuses, tertiary stats, and sockets, when present.</p>
+                <p>Item socket IDs can be mapped via the ItemSocketType in-game enum. See ItemConstantsDocumentation.lua.</p>
                 <blockquote class="code try-it">{
   "request": {
     "region": "us",
@@ -1705,6 +1706,12 @@
         "modifiers": {"28": 3606, "29": 32, "30": 49},
         "bonuses": [42, 10844, 12795, 13334, 13577],
         "stats": ["speed"]
+      },
+      {
+        "price": 1690000000,
+        "modifiers": {"28": 5381},
+        "bonuses": [6652, 12817, 13663, 13695],
+        "sockets": [7]
       },
       ...
     ]
