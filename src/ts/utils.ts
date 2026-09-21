@@ -1,6 +1,10 @@
 import {COPPER_GOLD, COPPER_SILVER, MS_DAY, MS_HOUR, MS_MINUTE} from "./constants";
 import {Money, PlainObject} from "./Types";
 
+export function showForever(): boolean {
+    return sessionStorage.getItem('forever') != null;
+}
+
 /**
  * Returns true when the primary input can hover.
  */

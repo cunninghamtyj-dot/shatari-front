@@ -215,7 +215,7 @@ const Search = {
         if (!my.hash || !my.hashRealm) {
             Hash.set('', '');
         } else {
-            Hash.set(my.hash, `Search - ${my.hashRealm.name} ${my.hashRealm.region.toUpperCase()}`);
+            Hash.set(my.hash, `Search - ${my.hashRealm.name} ${Realms.getRegionName(my.hashRealm.region)}`);
         }
     },
 

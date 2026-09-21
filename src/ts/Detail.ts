@@ -136,7 +136,7 @@ const Detail = {
             let thisRealm = realm || Realms.getCurrentRealm();
             thisRealm && Hash.set(
                 Hash.getItemDetailHash(item, thisRealm),
-                `[${item.name}] - ${thisRealm.name} ${thisRealm.region.toUpperCase()}`,
+                `[${item.name}] - ${thisRealm.name} ${Realms.getRegionName(thisRealm.region)}`,
             );
         }
 
@@ -227,7 +227,7 @@ const Detail = {
             return;
         }
 
-        const regionName = tokenState.region.toUpperCase();
+        const regionName = Realms.getRegionName(tokenState.region);
         const days = tokenState.snapshots.length ? Math.round(
             (tokenState.snapshots[tokenState.snapshots.length - 1].snapshot - tokenState.snapshots[0].snapshot) / MS_DAY
         ) : 0;
@@ -720,7 +720,7 @@ async function populateDetails(item: Types.Item, itemState: Types.ItemState) {
         MS_DAY
     ) : 0;
     const realmName = itemState.realm.name;
-    const regionName = itemState.realm.region.toUpperCase();
+    const regionName = Realms.getRegionName(itemState.realm.region);
 
     const houseName = (item.stack ?? 0) > 1 ? `${regionName} realms` : realmName;
 

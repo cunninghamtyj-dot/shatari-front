@@ -3,6 +3,7 @@
  */
 
 import {createElement as ce, querySelector as qs} from "./utils";
+import {FactionSlug} from "./Types";
 
 export enum Locale {
     enus = 'enus',
@@ -56,6 +57,19 @@ const WOWHEAD_DOMAINS: {[key in Locale]: string} = {
     kokr: 'ko',
 };
 
+const FACTIONS: {[key in Locale]: {[key in FactionSlug]: string}} = {
+    enus: {alliance: "Alliance", horde: "Horde", neutral: "Neutral"},
+    dede: {alliance: "Allianz", horde: "Horde", neutral: "Neutral"},
+    eses: {alliance: "Alianza", horde: "Horda", neutral: "Neutral"},
+    esmx: {alliance: "Alianza", horde: "Horda", neutral: "Neutral"},
+    frfr: {alliance: "Alliance", horde: "Horde", neutral: "Neutre"},
+    itit: {alliance: "Alleanza", horde: "Orda", neutral: "Neutrale"},
+    ptbr: {alliance: "Aliança", horde: "Horda", neutral: "Tolerado"},
+    ruru: {alliance: "Альянс", horde: "Орда", neutral: "Общие"},
+    zhtw: {alliance: "聯盟", horde: "部落", neutral: "中立"},
+    kokr: {alliance: "얼라이언스", horde: "호드", neutral: "중립"},
+};
+
 type ModuleVars = {
     changeCallbacks: Array<(locale: Locale) => void>,
     locale: Locale,
@@ -69,6 +83,11 @@ const my: ModuleVars = {
  * Returns the current 4-letter lowercase locale code.
  */
 export const getCurrent = (): Locale => my.locale;
+
+/**
+ * Returns a map of faction names for the current locale.
+ */
+export const getFactionNames = (): {[key in FactionSlug]: string} => FACTIONS[my.locale];
 
 /**
  * Returns an ordered list of population names for the current locale.

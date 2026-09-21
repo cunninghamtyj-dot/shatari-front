@@ -1,4 +1,5 @@
 import {
+    showForever,
     createElement as ce,
     createText as ct,
     emptyElement as ee,
@@ -8,13 +9,17 @@ import {
 import {
     registerCallback as registerLocaleCallback,
     getCurrent as getCurrentLocale,
+    getFactionNames,
     getPopulationNames,
     Locale
 } from "./Locales";
 import Progress from "./Progress";
 import * as Types from "./Types";
 
-const REGIONS: Types.Region[] = ['us', 'eu', 'tw', 'kr'];
+const REGIONS: Types.Region[] = [
+    'us', 'eu', 'tw', 'kr',
+    ...(showForever() ? ['usf', 'euf', 'twf', 'krf'] : []),
+];
 
 type ModuleVars = {
     connectedRealms: Record<string, Record<Types.ConnectedRealmID, Types.ConnectedRealm>>;
@@ -81,7 +86,7 @@ const Realms = {
     /**
      * Returns a sorted array of connected realms for the given region.
      *
-     * @param {Region} region
+     * @param {Types.Region} region
      * @return {ConnectedRealm[]}
      */
     getRegionConnectedRealms(region: Types.Region): Types.ConnectedRealm[] {
@@ -89,6 +94,16 @@ const Realms = {
         result.sort((a, b) => a.canonical.name.localeCompare(b.canonical.name));
 
         return result;
+    },
+
+    /**
+     * Returns a user-facing name for the region.
+     *
+     * @param {Types.Region} region
+     * @return {string}
+     */
+    getRegionName(region: Types.Region): string {
+        return region.substring(0, 2).toUpperCase();
     },
 
     /**
@@ -196,8 +211,26 @@ async function getRealms() {
         throw 'Cannot get list of realm names!';
     }
 
-    my.realms = await responses[0].json();
+    const allRealms: Record<Types.RealmID, Types.Realm> = await responses[0].json();
+    my.realms = Object.fromEntries(
+        Object.entries(allRealms)
+            .filter(([realmId, realm]) => REGIONS.includes(realm.region))
+    );
     setNames(await responses[1].json());
+}
+
+/**
+ * Returns the user-facing English name for the region's product.
+ *
+ * @param {Types.Region} region
+ * @return {string}
+ */
+function getRegionProductName(region: Types.Region): string {
+    if (!showForever()) {
+        return '';
+    }
+
+    return /^\w\wf$/.test(region) ? 'Forever' : 'Midnight';
 }
 
 /**
@@ -233,12 +266,14 @@ function placeholderUsageCheck() {
  */
 function setNames(names: Record<Types.RealmID, {name: string, category: string, nativeName?: string}>) {
     const popNames = getPopulationNames();
+    const factionNames = getFactionNames();
 
     Object.values(my.realms).forEach(realm => {
+        const factionName = realm.faction ? ` ${factionNames[realm.faction]}` : '';
         const nameRec = names[realm.id];
-        realm.name = nameRec?.name || ('Realm ' + realm.id);
+        realm.name = (nameRec?.name || ('Realm ' + realm.id)) + factionName;
         if (nameRec?.nativeName) {
-            realm.nativeName = nameRec.nativeName;
+            realm.nativeName = nameRec.nativeName + factionName;
         } else {
             delete realm.nativeName;
         }
@@ -257,7 +292,11 @@ function updateSelectNames(savedRealmId?: Types.RealmID) {
 
     if (!select.querySelector('optgroup')) {
         REGIONS.forEach(region => {
-            select.appendChild(ce('optgroup', {dataset: {region}, label: region.toUpperCase() + ' Realms'}));
+            select.appendChild(ce('optgroup', {
+                dataset: {region},
+                label: [Realms.getRegionName(region), getRegionProductName(region), 'Realms']
+                    .filter(str => !!str).join(' '),
+            }));
         });
     }
 
@@ -296,13 +335,13 @@ function updateSelectNames(savedRealmId?: Types.RealmID) {
         const seenOpt = seenNames[realm.name];
         if (seenOpt) {
             if (seenOpt !== true) {
-                seenOpt.label += ' ' + my.realms[parseInt(seenOpt.value)]?.region.toUpperCase();
+                seenOpt.label += ' ' + Realms.getRegionName(my.realms[parseInt(seenOpt.value)]?.region);
                 ee(seenOpt);
                 seenOpt.appendChild(ct(seenOpt.label));
 
                 seenNames[realm.name] = true;
             }
-            option.label += ' ' + realm.region.toUpperCase();
+            option.label += ' ' + Realms.getRegionName(realm.region);
         } else {
             seenNames[realm.name] = option;
         }

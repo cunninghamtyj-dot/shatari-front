@@ -2,6 +2,7 @@ export type PlainObject = Record<string, any>;
 export type BattlePetSpeciesID = number;
 export type ClassID = number;
 export type ConnectedRealmID = number;
+export type FactionSlug = 'alliance'|'horde'|'neutral';
 export type InventoryType = number;
 export type ItemID = number;
 export type ItemKeyString = string;
@@ -100,6 +101,7 @@ export type PricedItem = Item & {
 export type Realm = {
     category: string;
     connectedId: ConnectedRealmID;
+    faction?: FactionSlug;
     id: RealmID;
     name: string;
     nativeName?: string;

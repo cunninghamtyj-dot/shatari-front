@@ -141,7 +141,7 @@ const Auctions = {
         }
 
         if ((item.stack ?? 1) > 1) {
-            realm = getCommodityRealm(realm.region);
+            realm = getCommodityRealm(realm.region) ?? realm;
         }
 
         return getItemState(realm, Auctions.strip(item), useCache);
@@ -435,17 +435,17 @@ async function getBonusToSockets(): Promise<Record<number, number[]>> {
 /**
  * Returns a fake Realm object for the commodity realm used by the given region.
  */
-function getCommodityRealm(region: Types.Region): Types.Realm {
-    return {
+function getCommodityRealm(region: Types.Region): Types.Realm|null {
+    return COMMODITY_REALMS[region] ? {
         category: 'Commodities',
         connectedId: COMMODITY_REALMS[region],
         id: COMMODITY_REALMS[region],
-        name: region.toUpperCase(),
+        name: Realms.getRegionName(region),
         region: region,
         slug: 'commodity',
         population: 0,
         populationName: '',
-    };
+    } : null;
 }
 
 /**
@@ -633,10 +633,11 @@ async function getRealmState(realm: Types.Realm): Promise<Types.RealmState> {
 
     let response: Response;
     let commodityRealmState: Types.RealmState|null;
+    const commodityRealm: Types.Realm|null = isCommodityRealm ? null : getCommodityRealm(realm.region);
     const filename = isPaid() ? 'state.bin' : 'state.free.bin';
     [response, commodityRealmState] = await Promise.all([
         Progress.fetch(`data/${realm.connectedId}/${filename}`, {mode: 'same-origin'}),
-        isCommodityRealm ? Promise.resolve(null) : getRealmState(getCommodityRealm(realm.region)),
+        commodityRealm ? getRealmState(commodityRealm) : Promise.resolve(null),
     ]);
 
     if (!response.ok) {
@@ -731,7 +732,7 @@ async function getRealmState(realm: Types.Realm): Promise<Types.RealmState> {
         }
     }
 
-    if (!isCommodityRealm && commodityRealmState) {
+    if (commodityRealmState) {
         mergeCommodityData(result, commodityRealmState);
     }
 
