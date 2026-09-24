@@ -9,6 +9,7 @@ export type ItemKeyString = string;
 export type SuffixID = number;
 // Expressed in coppers.
 export type Money = number;
+export type Product = 'mainline'|'forever';
 export type RealmID = number;
 // "us" or "eu", etc.
 export type Region = string;

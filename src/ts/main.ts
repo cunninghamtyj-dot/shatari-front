@@ -72,13 +72,19 @@ async function init() {
     }
 
     LocalesInit();
+    {
+        // These don't need Realms to be ready.
+        const waitFor = [Account.init()];
 
-    await Promise.all([
-        Categories.init(),
-        ItemsInit(),
-        Realms.init(),
-        Account.init(),
-    ]);
+        // Wait for Realms to get ready.
+        await Realms.init();
+
+        // These need Realms to be ready.
+        waitFor.push(Categories.init(), ItemsInit());
+
+        // Wait for all of those (besides Realms).
+        await Promise.all(waitFor);
+    }
 
     const filterButton = qs('.main .search-bar .filter');
     filterButton?.addEventListener('mouseup', (event) => {

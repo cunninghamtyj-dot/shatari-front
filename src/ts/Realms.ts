@@ -16,20 +16,28 @@ import {
 import Progress from "./Progress";
 import * as Types from "./Types";
 
+const PRODUCT_MAINLINE: Types.Product = 'mainline';
+const PRODUCT_FOREVER: Types.Product = 'forever';
+
 const REGIONS: Types.Region[] = [
-    'us', 'eu', 'tw', 'kr',
-    ...(showForever() ? ['usf', 'euf', 'twf', 'krf'] : []),
-];
+    'usf', 'us',
+    'euf', 'eu',
+    'twf', 'tw',
+    'krf', 'kr',
+].filter(region => showForever() || (getRegionProduct(region) !== PRODUCT_FOREVER));
 
 type ModuleVars = {
     connectedRealms: Record<string, Record<Types.ConnectedRealmID, Types.ConnectedRealm>>;
     realms: Record<Types.RealmID, Types.Realm>;
+    lastProduct: Types.Product;
+    productChangeCallbacks: Array<(product: Types.Product) => void>,
 }
 
 const my: ModuleVars = {
     connectedRealms: {},
-
     realms: {},
+    lastProduct: PRODUCT_MAINLINE,
+    productChangeCallbacks: [],
 };
 
 /**
@@ -41,6 +49,10 @@ const Realms = {
      */
     getConnectedRealm(realm: Types.Realm): Types.ConnectedRealm {
         return getConnectedRealmsForRegion(realm.region)[realm.connectedId];
+    },
+
+    getCurrentProduct(): Types.Product {
+        return my.lastProduct;
     },
 
     /**
@@ -114,12 +126,23 @@ const Realms = {
 
         const select = qs('.main .search-bar select') as HTMLSelectElement;
         select.addEventListener('change', placeholderUsageCheck);
+        select.addEventListener('change', productChangeCheck);
 
         updateSelectNames(parseInt(localStorage.getItem('realm') || '0'));
 
         placeholderUsageCheck();
+        productChangeCheck();
 
         registerLocaleCallback(onLocaleChange);
+    },
+
+    /**
+     * Registers a callback for when the product changes. The product is given as the first param.
+     */
+    registerProductCallback(callback: (product: Types.Product) => void) {
+        if (!my.productChangeCallbacks.includes(callback)) {
+            my.productChangeCallbacks.push(callback);
+        }
     },
 
     /**
@@ -220,6 +243,16 @@ async function getRealms() {
 }
 
 /**
+ * Returns the product for the given region.
+ *
+ * @param {Types.Region} region
+ * @return {Types.Product}
+ */
+function getRegionProduct(region: Types.Region): Types.Product {
+    return /^\w\wf$/.test(region) ? PRODUCT_FOREVER : PRODUCT_MAINLINE;
+}
+
+/**
  * Returns the user-facing English name for the region's product.
  *
  * @param {Types.Region} region
@@ -230,7 +263,10 @@ function getRegionProductName(region: Types.Region): string {
         return '';
     }
 
-    return /^\w\wf$/.test(region) ? 'Forever' : 'Midnight';
+    return {
+        [PRODUCT_FOREVER]: 'Forever',
+        [PRODUCT_MAINLINE]: 'Midnight',
+    }[getRegionProduct(region)];
 }
 
 /**
@@ -258,6 +294,20 @@ function placeholderUsageCheck() {
         }
     } else {
         select.removeEventListener('change', placeholderUsageCheck);
+    }
+}
+
+/**
+ * Fires product change callbacks if the product changed since our last check.
+ */
+function productChangeCheck() {
+    const realm = Realms.getCurrentRealm();
+    if (realm) {
+        const product = getRegionProduct(realm.region);
+        if (product !== my.lastProduct) {
+            my.lastProduct = product;
+            my.productChangeCallbacks.forEach(f => f(product));
+        }
     }
 }
 

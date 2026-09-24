@@ -8,6 +8,6 @@ public/data/
 public/icons/
 json/realm-list*
 json/realms
-json/*.bound.*
+json/*/*.bound.*
 *.gz
 *.br

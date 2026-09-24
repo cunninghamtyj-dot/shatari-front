@@ -9,6 +9,7 @@ import Detail from "./Detail";
 import {ItemClass} from "./Items";
 import {registerCallback as registerLocaleCallback, getCurrent as getCurrentLocale} from "./Locales";
 import Progress from "./Progress";
+import Realms from "./Realms";
 import * as Types from "./Types";
 
 type Category = {
@@ -271,6 +272,7 @@ const Categories = {
         });
 
         registerLocaleCallback(onLocaleChange);
+        Realms.registerProductCallback(onLocaleChange);
     },
 
     /**
@@ -478,7 +480,8 @@ async function getCategories(): Promise<Category[]> {
     }
 
     const locale = getCurrentLocale();
-    const response = await Progress.fetch(`json/categories.${locale}.json`, {mode: 'same-origin'});
+    const product = Realms.getCurrentProduct();
+    const response = await Progress.fetch(`json/${product}/categories.${locale}.json`, {mode: 'same-origin'});
     if (!response.ok) {
         throw 'Cannot get list of categories!';
     }
