@@ -431,6 +431,7 @@ function getCommodityRealm(region: Types.Region): Types.Realm|null {
         slug: 'commodity',
         population: 0,
         populationName: '',
+        product: Realms.getRegionProduct(region),
     } : null;
 }
 

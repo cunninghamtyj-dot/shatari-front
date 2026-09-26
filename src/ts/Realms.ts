@@ -116,6 +116,16 @@ const Realms = {
     },
 
     /**
+     * Returns the product enum for the given region.
+     *
+     * @param {Types.Region} region
+     * @return {Types.Product}
+     */
+    getRegionProduct(region: Types.Region): Types.Product {
+        return getRegionProduct(region);
+    },
+
+    /**
      * Fetches the realm list data and creates the realm list dropdown.
      */
     async init() {
