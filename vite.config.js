@@ -15,9 +15,24 @@ const serveJsonDir = {
     apply: 'serve',
     configureServer(server) {
         server.middlewares.use('/json', (req, res, next) => {
-            const filePath = path.join(process.cwd(), 'json', req.url);
+            const filePath = path.join(process.cwd(), 'json', req.url ?? '');
+
+            // Prevent path traversal outside the json dir
+            const jsonRoot = path.join(process.cwd(), 'json');
+            if (!filePath.startsWith(jsonRoot)) {
+                res.statusCode = 403;
+                res.end('Forbidden');
+                return;
+            }
+
             fs.readFile(filePath, (err, data) => {
-                if (err) return next();
+                if (err) {
+                    res.statusCode = 404;
+                    res.setHeader('Content-Type', 'text/plain');
+                    res.end('Not Found');
+                    return;
+                }
+                res.setHeader('Content-Type', 'application/json');
                 res.end(data);
             });
         });

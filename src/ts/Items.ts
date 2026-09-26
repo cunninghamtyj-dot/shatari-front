@@ -10,6 +10,7 @@ import Auctions from "./Auctions";
 import Categories from "./Categories";
 import {registerCallback as registerLocaleCallback, getCurrent as getCurrentLocale, Locale} from "./Locales";
 import Progress from "./Progress";
+import Realms from "./Realms";
 import Search from "./Search";
 import * as Types from "./Types";
 
@@ -252,17 +253,23 @@ export function getVendorSellPrice(item: Types.Item): Types.Money {
  * Fetches the item list data.
  */
 export async function init() {
-    await Promise.all([
-        fetchItemIds(),
-        fetchItemNames(getCurrentLocale()),
-        fetchItemSuffixes(getCurrentLocale()),
-        fetchBattlePets(),
-        fetchBattlePetNames(getCurrentLocale()),
-        fetchCraftingQualities(),
-        fetchVendor(),
-    ]);
+    registerLocaleCallback(fetchItemNames);
+    registerLocaleCallback(fetchItemSuffixes);
+    registerLocaleCallback(fetchBattlePetNames);
 
-    registerLocaleCallback(onLocaleChange);
+    const allFetches = [
+        fetchItemNames,
+        fetchItemSuffixes,
+        fetchBattlePetNames,
+        fetchItemIds,
+        fetchBattlePets,
+        fetchCraftingQualities,
+        fetchVendor,
+    ];
+    await Promise.all(allFetches.map(f => {
+        Realms.registerProductCallback(f);
+        return f();
+    }));
 }
 
 /**
@@ -663,8 +670,11 @@ function escapeRegExp(string: string): string {
 /**
  * Fetches the list of battle pet names and stores it locally.
  */
-async function fetchBattlePetNames(locale: Locale) {
-    const response = await Progress.fetch(`json/battlepets.${locale}.json`, {mode: 'same-origin'});
+async function fetchBattlePetNames() {
+    const locale = getCurrentLocale();
+    const product = Realms.getCurrentProduct();
+
+    const response = await Progress.fetch(`json/${product}/battlepets.${locale}.json`, {mode: 'same-origin'});
     if (!response.ok) {
         throw 'Cannot get list of battle pet names!';
     }
@@ -677,7 +687,9 @@ async function fetchBattlePetNames(locale: Locale) {
  * Fetches the list of battle pets and stores it locally.
  */
 async function fetchBattlePets() {
-    const response = await Progress.fetch('json/battlepets.json', {mode: 'same-origin'});
+    const product = Realms.getCurrentProduct();
+
+    const response = await Progress.fetch(`json/${product}/battlepets.json`, {mode: 'same-origin'});
     if (!response.ok) {
         throw 'Cannot get list of battle pets!';
     }
@@ -695,7 +707,9 @@ async function fetchBattlePets() {
  * Fetches the list of crafting quality data and stores it locally.
  */
 async function fetchCraftingQualities() {
-    const response = await Progress.fetch('json/craftingQualities.json', {mode: 'same-origin'});
+    const product = Realms.getCurrentProduct();
+
+    const response = await Progress.fetch(`json/${product}/craftingQualities.json`, {mode: 'same-origin'});
     if (!response.ok) {
         throw 'Cannot get list of crafting qualities!';
     }
@@ -712,12 +726,14 @@ async function fetchCraftingQualities() {
  * Fetches the list of item IDs and stores it locally.
  */
 async function fetchItemIds() {
+    const product = Realms.getCurrentProduct();
+
     let unboundResponse;
     let boundResponse;
 
     [unboundResponse, boundResponse] = await Promise.all([
-        Progress.fetch('json/items.unbound.json', {mode: 'same-origin'}),
-        Progress.fetch('json/items.bound.json', {mode: 'same-origin'}),
+        Progress.fetch(`json/${product}/items.unbound.json`, {mode: 'same-origin'}),
+        Progress.fetch(`json/${product}/items.bound.json`, {mode: 'same-origin'}),
     ]);
 
     if (!unboundResponse.ok) {
@@ -736,7 +752,11 @@ async function fetchItemIds() {
         if (!item.icon) {
             item.icon = 'inv_misc_questionmark';
         }
-        if (item['class'] === ItemClass.Miscellaneous && item.subclass === ItemSubclass.MiscellaneousPet) {
+        if (
+            product !== Types.Product.forever &&
+            item['class'] === ItemClass.Miscellaneous &&
+            item.subclass === ItemSubclass.MiscellaneousPet
+        ) {
             item['class'] = ItemClass.BattlePet;
             item.subclass = ItemSubclass.BattlePetCompanion;
         }
@@ -746,13 +766,16 @@ async function fetchItemIds() {
 /**
  * Fetches the list of item names and stores it locally.
  */
-async function fetchItemNames(locale: Locale) {
+async function fetchItemNames() {
+    const locale = getCurrentLocale();
+    const product = Realms.getCurrentProduct();
+
     let unboundResponse;
     let boundResponse;
 
     [unboundResponse, boundResponse] = await Promise.all([
-        Progress.fetch(`json/names.unbound.${locale}.json`, {mode: 'same-origin'}),
-        Progress.fetch(`json/names.bound.${locale}.json`, {mode: 'same-origin'}),
+        Progress.fetch(`json/${product}/names.unbound.${locale}.json`, {mode: 'same-origin'}),
+        Progress.fetch(`json/${product}/names.bound.${locale}.json`, {mode: 'same-origin'}),
     ]);
 
     if (!unboundResponse.ok) {
@@ -769,8 +792,11 @@ async function fetchItemNames(locale: Locale) {
 /**
  * Fetches the list of item names and stores it locally.
  */
-async function fetchItemSuffixes(locale: Locale) {
-    const response = await Progress.fetch(`json/name-suffixes.${locale}.json`, {mode: 'same-origin'});
+async function fetchItemSuffixes() {
+    const locale = getCurrentLocale();
+    const product = Realms.getCurrentProduct();
+
+    const response = await Progress.fetch(`json/${product}/name-suffixes.${locale}.json`, {mode: 'same-origin'});
     if (!response.ok) {
         throw 'Cannot get list of item suffixes!';
     }
@@ -788,7 +814,9 @@ async function fetchItemSuffixes(locale: Locale) {
  * Fetches the list of vendor sell data and stores it locally.
  */
 async function fetchVendor() {
-    const response = await Progress.fetch('json/vendor.json', {mode: 'same-origin'});
+    const product = Realms.getCurrentProduct();
+
+    const response = await Progress.fetch(`json/${product}/vendor.json`, {mode: 'same-origin'});
     if (!response.ok) {
         throw 'Cannot get vendor pricing data!';
     }
@@ -819,15 +847,3 @@ const normalizeForSearch = (fancy: string) => fancy.replace(
     /[‘’‛‚ʼʻʽʾʿ“”„«»–—−…\u00A0\u3000]/g,
     match => NORMALIZATION_MAP[match] ?? match,
 ).normalize('NFD').replace(/[\u0300-\u036f]/g, '');
-
-/**
- * Called when the user changes their preferred locale, this fetches new names for items and pets.
- */
-async function onLocaleChange(locale: Locale) {
-    await Promise.all([
-        fetchBattlePetNames(locale),
-        fetchItemNames(locale),
-        fetchItemSuffixes(locale),
-    ]);
-}
-
