@@ -9,7 +9,10 @@ export type ItemKeyString = string;
 export type SuffixID = number;
 // Expressed in coppers.
 export type Money = number;
-export type Product = 'mainline'|'forever';
+export enum Product {
+    mainline = 'mainline',
+    forever = 'forever',
+}
 export type RealmID = number;
 // "us" or "eu", etc.
 export type Region = string;
@@ -108,6 +111,7 @@ export type Realm = {
     nativeName?: string;
     population: number;
     populationName: string;
+    product: Product;
     region: Region;
     slug: string;
 }

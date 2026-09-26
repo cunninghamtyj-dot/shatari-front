@@ -16,15 +16,12 @@ import {
 import Progress from "./Progress";
 import * as Types from "./Types";
 
-const PRODUCT_MAINLINE: Types.Product = 'mainline';
-const PRODUCT_FOREVER: Types.Product = 'forever';
-
 const REGIONS: Types.Region[] = [
     'usf', 'us',
     'euf', 'eu',
     'twf', 'tw',
     'krf', 'kr',
-].filter(region => showForever() || (getRegionProduct(region) !== PRODUCT_FOREVER));
+].filter(region => showForever() || (getRegionProduct(region) !== Types.Product.forever));
 
 type ModuleVars = {
     connectedRealms: Record<string, Record<Types.ConnectedRealmID, Types.ConnectedRealm>>;
@@ -36,7 +33,7 @@ type ModuleVars = {
 const my: ModuleVars = {
     connectedRealms: {},
     realms: {},
-    lastProduct: PRODUCT_MAINLINE,
+    lastProduct: Types.Product.mainline,
     productChangeCallbacks: [],
 };
 
@@ -234,10 +231,11 @@ async function getRealms() {
         throw 'Cannot get list of realm names!';
     }
 
-    const allRealms: Record<Types.RealmID, Types.Realm> = await responses[0].json();
+    const allRealms: Record<Types.RealmID, Omit<Types.Realm, 'product'>> = await responses[0].json();
     my.realms = Object.fromEntries(
         Object.entries(allRealms)
             .filter(([realmId, realm]) => REGIONS.includes(realm.region))
+            .map(([realmId, realm]) => [realmId, {product: getRegionProduct(realm.region), ...realm}])
     );
     setNames(await responses[1].json());
 }
@@ -249,7 +247,7 @@ async function getRealms() {
  * @return {Types.Product}
  */
 function getRegionProduct(region: Types.Region): Types.Product {
-    return /^\w\wf$/.test(region) ? PRODUCT_FOREVER : PRODUCT_MAINLINE;
+    return /^\w\wf$/.test(region) ? Types.Product.forever : Types.Product.mainline;
 }
 
 /**
@@ -264,8 +262,8 @@ function getRegionProductName(region: Types.Region): string {
     }
 
     return {
-        [PRODUCT_FOREVER]: 'Forever',
-        [PRODUCT_MAINLINE]: 'Midnight',
+        [Types.Product.forever]: 'Forever',
+        [Types.Product.mainline]: 'Midnight',
     }[getRegionProduct(region)];
 }
 
@@ -302,12 +300,9 @@ function placeholderUsageCheck() {
  */
 function productChangeCheck() {
     const realm = Realms.getCurrentRealm();
-    if (realm) {
-        const product = getRegionProduct(realm.region);
-        if (product !== my.lastProduct) {
-            my.lastProduct = product;
-            my.productChangeCallbacks.forEach(f => f(product));
-        }
+    if (realm && realm.product !== my.lastProduct) {
+        my.lastProduct = realm.product;
+        my.productChangeCallbacks.forEach(f => f(realm.product));
     }
 }
 
