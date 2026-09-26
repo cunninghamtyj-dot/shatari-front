@@ -399,38 +399,23 @@ async function fetchSnapshotList(): Promise<Record<Types.ConnectedRealmID, Types
 }
 
 /**
- * Returns the map of bonus ID => tertiary stat IDs.
+ * Returns the maps of bonus ID => tertiary stat IDs, and socket IDs.
  */
-async function getBonusToStats(realm: Types.Realm): Promise<Record<number, number[]>> {
-    const cached = my.bonusToStats[realm.product];
-    if (cached) {
-        return cached;
-    }
+async function getBonusMaps(realm: Types.Realm): Promise<{stats: Record<number, number[]>, sockets: Record<number, number[]>}> {
+    const load = async (file: string): Promise<Record<number, number[]>> => {
+        const response = await Progress.fetch(`json/${realm.product}/${file}.json`, {mode: 'same-origin'});
+        if (!response.ok) {
+            throw `Cannot get bonus map: ${file}`;
+        }
+        return await response.json();
+    };
 
-    const response = await Progress.fetch(`json/${realm.product}/bonusToStats.json`, {mode: 'same-origin'});
-    if (!response.ok) {
-        throw 'Cannot get map of bonus to stats!';
-    }
+    const parts = await Promise.all([
+        (async () => my.bonusToStats[realm.product] ??= await load('bonusToStats'))(),
+        (async () => my.bonusToSockets[realm.product] ??= await load('bonusToSockets'))(),
+    ]);
 
-    return my.bonusToStats[realm.product] = await response.json();
-}
-
-/**
- * Returns the map of bonus ID => socket IDs.
- */
-async function getBonusToSockets(realm: Types.Realm): Promise<Record<number, number[]>> {
-    const cached = my.bonusToSockets[realm.product];
-    if (cached) {
-        return cached;
-    }
-
-    const response = await Progress.fetch(`json/${realm.product}/bonusToSockets.json`, {mode: 'same-origin'});
-
-    if (!response.ok) {
-        throw 'Cannot get map of bonus to sockets!';
-    }
-
-    return my.bonusToSockets[realm.product] = await response.json();
+    return {stats: parts[0], sockets: parts[1]};
 }
 
 /**
@@ -518,8 +503,7 @@ async function getItemState(realm: Types.Realm, item: Types.Item, useCached: boo
     }
     result.auctions.sort((a, b) => a.price - b.price);
 
-    const bonusToStats = await getBonusToStats(realm);
-    const bonusToSockets = await getBonusToSockets(realm);
+    const {stats: bonusToStats, sockets: bonusToSockets} = await getBonusMaps(realm);
     for (let remaining = view.getUint16(read(2), true); remaining > 0; remaining--) {
         let price = view.getUint32(read(4), true) * COPPER_SILVER;
         let modifiers: Record<number, number> = {};
