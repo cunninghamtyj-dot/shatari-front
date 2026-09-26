@@ -6,8 +6,5 @@ dist/
 public/css/*.map
 public/data/
 public/icons/
-json/realm-list*
-json/realms
-json/*/*.bound.*
 *.gz
 *.br
