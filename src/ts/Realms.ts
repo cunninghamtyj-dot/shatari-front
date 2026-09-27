@@ -1,8 +1,8 @@
 import {
-    showForever,
     createElement as ce,
     createText as ct,
     emptyElement as ee,
+    productAvailable,
     querySelector as qs
 } from "./utils";
 
@@ -21,7 +21,7 @@ const REGIONS: Types.Region[] = [
     'euf', 'eu',
     'twf', 'tw',
     'krf', 'kr',
-].filter(region => showForever() || (getRegionProduct(region) !== Types.Product.forever));
+].filter(region => productAvailable(getRegionProduct(region)));
 
 type ModuleVars = {
     connectedRealms: Record<string, Record<Types.ConnectedRealmID, Types.ConnectedRealm>>;
@@ -33,7 +33,7 @@ type ModuleVars = {
 const my: ModuleVars = {
     connectedRealms: {},
     realms: {},
-    lastProduct: Types.Product.mainline,
+    lastProduct: Types.Product.Mainline,
     productChangeCallbacks: [],
 };
 
@@ -257,7 +257,7 @@ async function getRealms() {
  * @return {Types.Product}
  */
 function getRegionProduct(region: Types.Region): Types.Product {
-    return /^\w\wf$/.test(region) ? Types.Product.forever : Types.Product.mainline;
+    return /^\w\wf$/.test(region) ? Types.Product.Forever : Types.Product.Mainline;
 }
 
 /**
@@ -267,14 +267,16 @@ function getRegionProduct(region: Types.Region): Types.Product {
  * @return {string}
  */
 function getRegionProductName(region: Types.Region): string {
-    if (!showForever()) {
+    const nameMap: Record<Types.Product, string> = {
+        [Types.Product.Forever]: 'Forever',
+        [Types.Product.Mainline]: 'Midnight',
+    };
+
+    if ((Object.keys(nameMap) as Types.Product[]).filter(productAvailable).length < 2) {
         return '';
     }
 
-    return {
-        [Types.Product.forever]: 'Forever',
-        [Types.Product.mainline]: 'Midnight',
-    }[getRegionProduct(region)];
+    return nameMap[getRegionProduct(region)];
 }
 
 /**

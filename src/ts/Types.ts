@@ -14,8 +14,8 @@ export type SuffixID = number;
 // Expressed in coppers.
 export type Money = number;
 export enum Product {
-    mainline = 'mainline',
-    forever = 'forever',
+    Mainline = 'mainline',
+    Forever = 'forever',
 }
 export type RealmID = number;
 // "us" or "eu", etc.

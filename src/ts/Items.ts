@@ -753,7 +753,7 @@ async function fetchItemIds() {
             item.icon = 'inv_misc_questionmark';
         }
         if (
-            product !== Types.Product.forever &&
+            product !== Types.Product.Forever &&
             item['class'] === ItemClass.Miscellaneous &&
             item.subclass === ItemSubclass.MiscellaneousPet
         ) {
