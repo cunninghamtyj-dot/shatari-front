@@ -16,7 +16,7 @@ import Categories, {DetailColumn} from "./Categories";
 import Detail from "./Detail";
 import Hash from "./Hash";
 import * as Items from "./Items";
-import {getWowheadDomain} from "./Locales";
+import {getWowheadDomain, getProductGlobalStrings, GlobalString} from "./Locales";
 import Realms from "./Realms";
 import Suggestions from "./Suggestions";
 import * as Types from "./Types";
@@ -53,11 +53,13 @@ const SEARCH_FAVORITES_BUTTON = qs('.main .search-bar .favorite') as HTMLElement
 const MAX_RESULTS_SHOWN = 500;
 
 type ModuleVars = {
+    clickForDetailsText: string,
     hash: string|undefined,
     hashRealm: Types.Realm|undefined,
     rows: SortRow[],
 }
 const my: ModuleVars = {
+    clickForDetailsText: '',
     hash: undefined,
     hashRealm: undefined,
     rows: [],
@@ -379,6 +381,7 @@ function createRow(
         tr.appendChild(td = document.createElement('td'));
         td.className = 'price';
         const rowLink = document.createElement('a') as WowheadAnchor;
+        const fixes: ((html: string, type: number, typeId: string, element: HTMLAnchorElement) => string)[] = [];
         const price = item.price;
         if (price || restricted) {
             td.appendChild(restricted ? createRestricted(priceElement(123456)) : priceElement(price));
@@ -392,7 +395,7 @@ function createRow(
                 vsp >= 10000
             ) {
                 tr.classList.add('vendor-flip');
-                rowLink._fixTooltip = html => html + '<div class="q2">Posted for under vendor price!</div>';
+                fixes.push(html => html + '<div class="q2">Posted for under vendor price!</div>');
             }
         }
         if (canHover()) {
@@ -404,9 +407,8 @@ function createRow(
                 rowLink.dataset.wowhead = `item=${item.id}&domain=${getWowheadDomain()}`;
                 if (item.bonusLevel) {
                     rowLink.dataset.wowhead += `&ilvl=${item.bonusLevel}`;
-                    const oldFix = rowLink._fixTooltip;
-                    rowLink._fixTooltip = (html: string, type: number, typeId: string, element: HTMLAnchorElement) =>
-                        (oldFix?.(html, type, typeId, element) ?? html).replace(/[^<>]*<!--rlvl-->\d+[^<>]*(<br>)?/, '');
+                    // Hide required level line, it doesn't scale when we set &ilvl.
+                    fixes.push(html => html.replace(/[^<>]*<!--rlvl-->\d+[^<>]*(<br>)?/, ''));
                 }
                 if (suffix && suffix.bonus) {
                     rowLink.dataset.wowhead += `&bonus=${suffix.bonus}`;
@@ -421,6 +423,16 @@ function createRow(
                 event.preventDefault();
                 Detail.show(Auctions.strip(item), null);
             });
+            fixes.push(html => {
+                const div = ce('div', {className: 'q2'}, ce('br'));
+                div.appendChild(ct(my.clickForDetailsText));
+
+                return html + div.outerHTML;
+            });
+        }
+        if (fixes.length) {
+            rowLink._fixTooltip = (html: string, type: number, typeId: string, element: HTMLAnchorElement): string =>
+                fixes.reduce((html, callback) => callback(html, type, typeId, element), html);
         }
         td.appendChild(rowLink);
     }
@@ -714,6 +726,8 @@ async function showItemList(itemsList: Types.PricedItem[], includeNeverSeen: boo
     const vendorFlip = paid && !arbitrage && (qs('.main .search-bar .filter [name="vendor-flip"]') as HTMLInputElement).checked;
     const bonusStat = Categories.getBonusStat();
     const showingRedactedStatsList = !paid && bonusStat != null;
+
+    my.clickForDetailsText = getProductGlobalStrings()[GlobalString.ClickToViewDetails];
 
     let itemKeyAllowList;
     if (bonusStat != null) {
