@@ -71,7 +71,7 @@ async function init() {
         });
     }
 
-    LocalesInit();
+    await LocalesInit();
     {
         // These don't need Realms to be ready.
         const waitFor = [Account.init()];

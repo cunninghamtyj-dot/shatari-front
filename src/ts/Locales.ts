@@ -3,7 +3,9 @@
  */
 
 import {createElement as ce, querySelector as qs} from "./utils";
-import {FactionSlug} from "./Types";
+import Progress from "./Progress";
+import {FactionSlug, Product} from "./Types";
+import Realms from "./Realms";
 
 export enum Locale {
     enus = 'enus',
@@ -18,18 +20,19 @@ export enum Locale {
     kokr = 'kokr',
 }
 
-const POPULATION_NAMES: {[key in Locale]: [string, string, string, string, string, string, string, string]} = {
-    enus: ['', 'New', 'New Players', 'Low', 'Medium', 'High', 'Full', 'Locked'],
-    dede: ['', 'Neu', 'Empfohlen', 'Niedrig', 'Mittel', 'Hoch', 'Voll', 'Verschl.'],
-    eses: ['', 'Nuevo', 'Jugadores nuevos', 'Bajo', 'Medio', 'Alto', 'Lleno', 'Bloqueado'],
-    esmx: ['', 'Nuevo', 'Jugadores nuevos', 'Bajo', 'Medio', 'Alto', 'Lleno', 'Bloqueado'],
-    frfr: ['', 'Nouveau', 'Recommandé', 'Faible', 'Moyenne', 'Élevée', 'Complet', 'Verrouillé'],
-    itit: ['', 'Nuovo', 'Nuovi giocatori', 'Bassa', 'Media', 'Alta', 'Saturo', 'Bloccato'],
-    ptbr: ['', 'Novo', 'Novos jogadores', 'Baixo', 'Médio', 'Alto', 'Completo', 'Trancado'],
-    ruru: ['', 'Новый', 'Новые игроки', 'Низкая', 'Средняя', 'Высокая', 'Нет мест', 'Доступ ограничен'],
-    zhtw: ['', '新', '新', '低', '中', '高', '滿', '已鎖定'],
-    kokr: ['', '신규', '신규 플레이어', '쾌적', '보통', '혼잡', '정원초과', '잠김'],
-};
+export enum GlobalString {
+    ClickToViewDetails = 'PROFESSIONS_SPECIALIZATION_VIEW_DETAILS',
+    PopulationLocked = 'REALM_LOCKED',
+    PopulationNew = 'LOAD_NEW',
+    PopulationNewPlayers = 'LOAD_RECOMMENDED',
+    PopulationLow = 'LOAD_LOW',
+    PopulationMedium = 'LOAD_MEDIUM',
+    PopulationHigh = 'LOAD_HIGH',
+    PopulationFull = 'LOAD_FULL',
+    FactionAlliance = 'FACTION_ALLIANCE',
+    FactionHorde = 'FACTION_HORDE',
+    FactionNeutral = 'FACTION_NEUTRAL',
+}
 
 const NAMES: {[key in Locale]: string} = {
     enus: 'English',
@@ -57,25 +60,14 @@ const WOWHEAD_DOMAINS: {[key in Locale]: string} = {
     kokr: 'ko',
 };
 
-const FACTIONS: {[key in Locale]: {[key in FactionSlug]: string}} = {
-    enus: {alliance: "Alliance", horde: "Horde", neutral: "Neutral"},
-    dede: {alliance: "Allianz", horde: "Horde", neutral: "Neutral"},
-    eses: {alliance: "Alianza", horde: "Horda", neutral: "Neutral"},
-    esmx: {alliance: "Alianza", horde: "Horda", neutral: "Neutral"},
-    frfr: {alliance: "Alliance", horde: "Horde", neutral: "Neutre"},
-    itit: {alliance: "Alleanza", horde: "Orda", neutral: "Neutrale"},
-    ptbr: {alliance: "Aliança", horde: "Horda", neutral: "Tolerado"},
-    ruru: {alliance: "Альянс", horde: "Орда", neutral: "Общие"},
-    zhtw: {alliance: "聯盟", horde: "部落", neutral: "中立"},
-    kokr: {alliance: "얼라이언스", horde: "호드", neutral: "중립"},
-};
-
 type ModuleVars = {
     changeCallbacks: Array<(locale: Locale) => void>,
+    globalStrings: Record<Product, Record<GlobalString, string>>,
     locale: Locale,
 }
 const my: ModuleVars = {
     changeCallbacks: [],
+    globalStrings: {} as Record<Product, Record<GlobalString, string>>,
     locale: Locale.enus,
 };
 
@@ -85,14 +77,48 @@ const my: ModuleVars = {
 export const getCurrent = (): Locale => my.locale;
 
 /**
- * Returns a map of faction names for the current locale.
+ * Returns a map of localized faction names per product.
  */
-export const getFactionNames = (): {[key in FactionSlug]: string} => FACTIONS[my.locale];
+export const getFactionNames = (): Record<Product, Record<FactionSlug, string>> => {
+    const entries = Object.values(Product)
+        .map(product => [product, {
+            [FactionSlug.Alliance]: my.globalStrings[product][GlobalString.FactionAlliance],
+            [FactionSlug.Horde]: my.globalStrings[product][GlobalString.FactionHorde],
+            [FactionSlug.Neutral]: my.globalStrings[product][GlobalString.FactionNeutral],
+        }]);
+
+    return Object.fromEntries(entries);
+};
 
 /**
- * Returns an ordered list of population names for the current locale.
+ * Returns a map of product => global string => localized string.
  */
-export const getPopulationNames = (): [string, string, string, string, string, string, string, string] => POPULATION_NAMES[my.locale];
+export const getGlobalStrings = (): Record<Product, Record<GlobalString, string>> => my.globalStrings;
+
+/**
+ * Returns a map of global string => localized string for the current/given product.
+ */
+export const getProductGlobalStrings = (product?: Product): Record<GlobalString, string> =>
+    my.globalStrings[product ?? Realms.getCurrentProduct()];
+
+/**
+ * Returns an ordered list of localized population names per product.
+ */
+export const getPopulationNames = (): Record<Product, [string, string, string, string, string, string, string, string]> => {
+    const entries = Object.values(Product)
+        .map(product => [product, [
+            '',
+            my.globalStrings[product][GlobalString.PopulationNew],
+            my.globalStrings[product][GlobalString.PopulationNewPlayers],
+            my.globalStrings[product][GlobalString.PopulationLow],
+            my.globalStrings[product][GlobalString.PopulationMedium],
+            my.globalStrings[product][GlobalString.PopulationHigh],
+            my.globalStrings[product][GlobalString.PopulationFull],
+            my.globalStrings[product][GlobalString.PopulationLocked],
+        ]]);
+
+    return Object.fromEntries(entries);
+};
 
 /**
  * Returns the Wowhead subdomain for the current locale.
@@ -107,11 +133,13 @@ export const getWowheadPathPrefix = (): string => my.locale === Locale.enus ? ''
 /**
  * Sets up any controls and reads the user's preferred locale from local storage.
  */
-export function init() {
+export async function init() {
     let storedLocale = localStorage.getItem('locale') ?? '';
     if (isLocale(storedLocale)) {
         my.locale = storedLocale;
     }
+
+    await loadGlobalStrings();
 
     const sel = qs('.main .bottom-bar select.locales') as HTMLSelectElement;
     Object.values(Locale).forEach(locale => {
@@ -136,7 +164,7 @@ export function registerCallback(callback: (locale: Locale) => void) {
 /**
  * Change the locale to the currently-selected locale in the given select element.
  */
-function changeLocale(sel: HTMLSelectElement) {
+async function changeLocale(sel: HTMLSelectElement) {
     const chosenLocale = sel.options[sel.selectedIndex].value;
     if (!isLocale(chosenLocale)) {
         return;
@@ -150,6 +178,8 @@ function changeLocale(sel: HTMLSelectElement) {
         // Ignore
     }
 
+    await loadGlobalStrings();
+
     my.changeCallbacks.forEach(f => f(my.locale));
 }
 
@@ -158,4 +188,20 @@ function changeLocale(sel: HTMLSelectElement) {
  */
 function isLocale(value: string): value is Locale {
     return Object.values(Locale).includes(value as Locale);
+}
+
+/**
+ * Loads globalstrings for all products into memory.
+ */
+async function loadGlobalStrings() {
+    const locale = getCurrent();
+
+    await Promise.all(Object.values(Product)
+        .map(async product => {
+            const response = await Progress.fetch(`json/${product}/globalStrings.${locale}.json`, {mode: 'same-origin'});
+            if (!response.ok) {
+                throw `Cannot get list of global strings for [${product}] [${locale}]!`;
+            }
+            my.globalStrings[product] = await response.json();
+        }));
 }

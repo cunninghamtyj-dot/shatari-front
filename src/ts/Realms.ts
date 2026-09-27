@@ -324,7 +324,7 @@ function setNames(names: Record<Types.RealmID, {name: string, category: string, 
     const factionNames = getFactionNames();
 
     Object.values(my.realms).forEach(realm => {
-        const factionName = realm.faction ? ` ${factionNames[realm.faction]}` : '';
+        const factionName = realm.faction ? ` ${factionNames[realm.product][realm.faction]}` : '';
         const nameRec = names[realm.id];
         realm.name = (nameRec?.name || ('Realm ' + realm.id)) + factionName;
         if (nameRec?.nativeName) {
@@ -333,7 +333,7 @@ function setNames(names: Record<Types.RealmID, {name: string, category: string, 
             delete realm.nativeName;
         }
         realm.category = nameRec?.category || '';
-        realm.populationName = popNames[realm.population] || '';
+        realm.populationName = popNames[realm.product][realm.population] || '';
     });
 }
 
