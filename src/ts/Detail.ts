@@ -527,8 +527,9 @@ async function fetchOtherRealms(item: Types.Item, region: Types.Region): Promise
  * Populate the auctions list in the rightmost panel.
  */
 function populateAuctions(item: Types.Item, itemState: Types.ItemState) {
-    const availableSpan = qs('.main .main-result .item .back-bar .available') as HTMLSpanElement;
+    const wowheadDomain = getWowheadDomain();
 
+    const availableSpan = qs('.main .main-result .item .back-bar .available') as HTMLSpanElement;
     availableSpan.appendChild(ct(itemState.quantity.toLocaleString() + ' Available'));
 
     const auctionsPanel = qs('.main .main-result .item .auctions') as HTMLDivElement;
@@ -616,7 +617,7 @@ function populateAuctions(item: Types.Item, itemState: Types.ItemState) {
         } else {
             const wowheadParams: string[] = [];
             wowheadParams.push('item=' + item.id);
-            wowheadParams.push('domain=' + getWowheadDomain());
+            wowheadParams.push(`domain=${wowheadDomain}`);
             if (specLine.bonuses.length) {
                 wowheadParams.push('bonus=' + specLine.bonuses.join(':'));
             }

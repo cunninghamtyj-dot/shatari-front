@@ -359,6 +359,7 @@ function createRow(
     hasRegionMedian :boolean,
     arbitrage: boolean,
     restricted: boolean,
+    wowheadDomain: string,
     favorites: Types.ItemKeyString[],
 ): HTMLTableRowElement {
     let suffix;
@@ -402,9 +403,9 @@ function createRow(
             if (restricted) {
                 rowLink.dataset.simpleTooltip = 'Become a patron to view pricing stats for this version of the item!';
             } else if (item.id === ITEM_PET_CAGE) {
-                rowLink.dataset.wowhead = `npc=${item.npc}&domain=${getWowheadDomain()}`;
+                rowLink.dataset.wowhead = `npc=${item.npc}&domain=${wowheadDomain}`;
             } else {
-                rowLink.dataset.wowhead = `item=${item.id}&domain=${getWowheadDomain()}`;
+                rowLink.dataset.wowhead = `item=${item.id}&domain=${wowheadDomain}`;
                 if (item.bonusLevel) {
                     rowLink.dataset.wowhead += `&ilvl=${item.bonusLevel}`;
                     // Hide required level line, it doesn't scale when we set &ilvl.
@@ -728,6 +729,7 @@ async function showItemList(itemsList: Types.PricedItem[], includeNeverSeen: boo
     const showingRedactedStatsList = !paid && bonusStat != null;
 
     my.clickForDetailsText = getProductGlobalStrings()[GlobalString.ClickToViewDetails];
+    const wowheadDomain = getWowheadDomain();
 
     let itemKeyAllowList;
     if (bonusStat != null) {
@@ -817,7 +819,7 @@ async function showItemList(itemsList: Types.PricedItem[], includeNeverSeen: boo
         }
 
         const sortRow: SortRow = [
-            createRow.bind(null, item, tbody, detailColumn, vendorFlip, showingDeals, hasRegionMedian, arbitrage, restricted),
+            createRow.bind(null, item, tbody, detailColumn, vendorFlip, showingDeals, hasRegionMedian, arbitrage, restricted, wowheadDomain),
             0, // Price
             '', // Name
         ];

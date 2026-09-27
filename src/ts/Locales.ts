@@ -60,6 +60,11 @@ const WOWHEAD_DOMAINS: {[key in Locale]: string} = {
     kokr: 'ko',
 };
 
+const WOWHEAD_PRODUCT_SELECTORS: Record<Product, string|undefined> = {
+    [Product.Forever]: 'forever',
+    [Product.Mainline]: undefined,
+}
+
 type ModuleVars = {
     changeCallbacks: Array<(locale: Locale) => void>,
     globalStrings: Record<Product, Record<GlobalString, string>>,
@@ -123,12 +128,30 @@ export const getPopulationNames = (): Record<Product, [string, string, string, s
 /**
  * Returns the Wowhead subdomain for the current locale.
  */
-export const getWowheadDomain = (): string => WOWHEAD_DOMAINS[my.locale];
+export const getWowheadDomain = (product?: Product): string => {
+    const selector = WOWHEAD_PRODUCT_SELECTORS[product ?? Realms.getCurrentProduct()];
+    let result = WOWHEAD_DOMAINS[my.locale];
+    if (selector) {
+        if (my.locale === Locale.enus) {
+            result = selector;
+        } else {
+            result = `${result}.${selector}`;
+        }
+    }
+
+    return result;
+}
 
 /**
  * Returns the Wowhead path prefix for the current locale.
  */
-export const getWowheadPathPrefix = (): string => my.locale === Locale.enus ? '' : (getWowheadDomain() + '/');
+export const getWowheadPathPrefix = (product ?: Product): string => {
+    const selector = WOWHEAD_PRODUCT_SELECTORS[product ?? Realms.getCurrentProduct()];
+    const localeDomain = my.locale === Locale.enus ? undefined : WOWHEAD_DOMAINS[my.locale];
+    const parts: string[] = [selector, localeDomain].filter(value => !!value) as string[];
+
+    return parts.length ? parts.join('/') + '/' : '';
+}
 
 /**
  * Sets up any controls and reads the user's preferred locale from local storage.
