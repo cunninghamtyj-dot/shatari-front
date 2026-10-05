@@ -5,6 +5,7 @@ import * as Account from "./Account";
 import Auctions from "./Auctions";
 import Categories from "./Categories";
 import Detail from "./Detail";
+import * as Faction from "./Faction";
 import Hash from "./Hash";
 import {init as ItemsInit} from "./Items";
 import {init as LocalesInit} from "./Locales";
@@ -35,6 +36,8 @@ async function init() {
             toReplace.parentNode?.replaceChild(df, toReplace);
         }
     }
+
+    Faction.init();
 
     let hsTag = ce('script', {
         src: 'highstock-10.3.3.js',

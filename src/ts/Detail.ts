@@ -20,6 +20,7 @@ import Realms from "./Realms";
 import Search from "./Search";
 import * as Types from "./Types";
 import {isPaid, showBenefitsText} from "./Account";
+import * as Faction from "./Faction";
 
 declare const Highcharts: typeof import('highcharts/highstock');
 
@@ -96,6 +97,15 @@ const my: ModuleVars = {
     everScrolled: false,
 };
 
+// Re-renders the most recently shown detail panel; used to recolor charts when the faction theme changes.
+let lastShown: (() => Promise<void>)|null = null;
+
+Faction.registerChangeCallback(() => {
+    if ((qs('.main .main-result') as HTMLDivElement|null)?.dataset.detailMode && lastShown) {
+        lastShown();
+    }
+});
+
 /**
  * Manages the display of an individual item's details.
  */
@@ -113,6 +123,7 @@ const Detail = {
      */
     async show(item: Types.Item, realm: Types.Realm|null) {
         (qs('.main .main-result') as HTMLDivElement).dataset.detailMode = '1';
+        lastShown = () => Detail.show(item, realm);
 
         const itemDiv = qs('.main .main-result .item') as HTMLDivElement;
         ee(itemDiv);
@@ -178,6 +189,7 @@ const Detail = {
      */
     async showWowToken() {
         (qs('.main .main-result') as HTMLDivElement).dataset.detailMode = '1';
+        lastShown = () => Detail.showWowToken();
         Hash.set('', '');
 
         const itemDiv = qs('.main .main-result .item') as HTMLDivElement;
@@ -1032,12 +1044,12 @@ async function populateDetails(item: Types.Item, itemState: Types.ItemState) {
 
         const priceSeries: Highcharts.SeriesOptionsType = {
             data: priceData,
-            fillColor: 'rgba(136,136,255,0.5)',
-            lineColor: '#8888FF',
+            fillColor: Faction.getColorRgba('chart-price', 0.5),
+            lineColor: Faction.getColor('chart-price'),
             marker: {
                 states: {
                     hover: {
-                        fillColor: '#8888FF',
+                        fillColor: Faction.getColor('chart-price'),
                     },
                 },
             },
@@ -1047,11 +1059,11 @@ async function populateDetails(item: Types.Item, itemState: Types.ItemState) {
         };
         const quantitySeries: Highcharts.SeriesOptionsType = {
             data: quantityData,
-            color: '#BB5555',
+            color: Faction.getColor('chart-quantity'),
             marker: {
                 states: {
                     hover: {
-                        fillColor: '#FF8888',
+                        fillColor: Faction.getColor('chart-quantity'),
                     },
                 },
             },
@@ -1190,13 +1202,13 @@ async function populateDetails(item: Types.Item, itemState: Types.ItemState) {
                 ],
                 enabled: !withTimes,
                 inputStyle: {
-                    color: '#CCCCCC',
+                    color: Faction.getColor('text30'),
                 },
                 selected: withTimes ? 5 : 4,
             },
             scrollbar: {
                 // middle button
-                barBackgroundColor: '#4a4644',
+                barBackgroundColor: Faction.getColor('bg40'),
                 barBorderRadius: 4,
                 barBorderWidth: 0,
 
@@ -1211,7 +1223,7 @@ async function populateDetails(item: Types.Item, itemState: Types.ItemState) {
 
                 // under all buttons
                 trackBackgroundColor: 'rgba(0,0,0,0)',
-                trackBorderColor: '#393433',
+                trackBorderColor: Faction.getColor('bg30'),
                 trackBorderRadius: 4,
                 trackBorderWidth: 1,
             },
@@ -1219,7 +1231,7 @@ async function populateDetails(item: Types.Item, itemState: Types.ItemState) {
             time: {useUTC: !withTimes},
             title: {text: undefined},
             tooltip: {
-                backgroundColor: '#282322',
+                backgroundColor: Faction.getColor('bg20'),
                 borderColor: '#777',
                 borderRadius: 4,
                 formatter: function () {
@@ -1230,7 +1242,7 @@ async function populateDetails(item: Types.Item, itemState: Types.ItemState) {
                         result.appendChild(ce('br'));
                         result.appendChild(ce(
                             'span',
-                            {style: {color: '#8888FF'}},
+                            {style: {color: Faction.getColor('chart-price')}},
                             ct((strings.priceTooltip || strings.price) + ': ')
                         ));
                         result.appendChild(ct((this.points[1].y / COPPER_GOLD).toFixed(2) + 'g'));
@@ -1239,7 +1251,7 @@ async function populateDetails(item: Types.Item, itemState: Types.ItemState) {
                     result.appendChild(ce('br'));
                     result.appendChild(ce(
                         'span',
-                        {style: {color: '#DD6666'}},
+                        {style: {color: Faction.getColor('chart-quantity')}},
                         ct((strings.quantityTooltip || strings.quantity) + ': ')
                     ));
                     result.appendChild(ct(this.points?.[0].y?.toLocaleString() ?? ''));
@@ -1248,7 +1260,7 @@ async function populateDetails(item: Types.Item, itemState: Types.ItemState) {
                 },
                 shared: true,
                 style: {
-                    color: '#EEEEEE',
+                    color: Faction.getColor('text10'),
                     fontFamily: '"Friz Quadrata TT", sans-serif',
                     fontSize: '14px',
                     lineHeight: '20px',
@@ -1274,23 +1286,23 @@ async function populateDetails(item: Types.Item, itemState: Types.ItemState) {
                         year: Highcharts.dateFormat('%Y', context.value as number),
                     }[context.tickPositionInfo?.unitName ?? 'day'].replace(/\s/g, NBSP)),
                     style: {
-                        color: '#CCCCCC',
+                        color: Faction.getColor('text30'),
                         fontSize: 'inherit',
                     },
                 },
-                lineColor: '#393433',
+                lineColor: Faction.getColor('bg30'),
                 lineWidth: 1,
                 minRange: 4 * MS_HOUR,
-                tickColor: '#393433',
+                tickColor: Faction.getColor('bg30'),
                 type: 'datetime',
             },
             yAxis: [{
-                gridLineColor: '#393433',
+                gridLineColor: Faction.getColor('bg30'),
                 labels: {
                     enabled: addAxisLabels,
                     formatter: priceFormatter,
                     style: {
-                        color: '#CCCCCC',
+                        color: Faction.getColor('text30'),
                         fontSize: 'inherit',
                     },
                 },
@@ -1299,7 +1311,7 @@ async function populateDetails(item: Types.Item, itemState: Types.ItemState) {
                 opposite: false,
                 title: {
                     style: {
-                        color: '#8888FF',
+                        color: Faction.getColor('chart-price'),
                     },
                     text: addAxisLabels ? strings.price : undefined,
                 },
@@ -1309,7 +1321,7 @@ async function populateDetails(item: Types.Item, itemState: Types.ItemState) {
                     enabled: addAxisLabels,
                     formatter: point => point.value.toLocaleString(),
                     style: {
-                        color: '#CCCCCC',
+                        color: Faction.getColor('text30'),
                         fontSize: 'inherit',
                     },
                 },
@@ -1318,7 +1330,7 @@ async function populateDetails(item: Types.Item, itemState: Types.ItemState) {
                 opposite: true,
                 title: {
                     style: {
-                        color: '#BB5555',
+                        color: Faction.getColor('chart-quantity'),
                     },
                     text: addAxisLabels ? strings.quantity : undefined,
                 },
@@ -1418,7 +1430,7 @@ async function populateDetails(item: Types.Item, itemState: Types.ItemState) {
                                 percentage = (copper - priceMin) / (priceMax - priceMin);
                                 percentage = Math.min(1, Math.max(0, percentage));
                             }
-                            cellProperties = {style: {backgroundColor: 'rgba(136, 136, 255, ' + (percentage * 0.5 + 0.1) + ')'}};
+                            cellProperties = {style: {backgroundColor: Faction.getColorRgba('chart-price', percentage * 0.5 + 0.1)}};
 
                             let money = copper / COPPER_SILVER;
                             let suffix = 's';
@@ -1472,7 +1484,7 @@ async function populateDetails(item: Types.Item, itemState: Types.ItemState) {
                                 percentage = (amount - quantityMin) / (quantityMax - quantityMin);
                                 percentage = Math.min(1, Math.max(0, percentage));
                             }
-                            cellProperties = {style: {backgroundColor: 'rgba(255, 136, 136, ' + (percentage * 0.5 + 0.1) + ')'}};
+                            cellProperties = {style: {backgroundColor: Faction.getColorRgba('chart-quantity', percentage * 0.5 + 0.1)}};
 
                             let scaled = amount;
                             let suffix = '';

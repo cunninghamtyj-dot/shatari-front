@@ -1,0 +1,70 @@
+// Azeroth Exchange faction themes.
+// The active theme is set by the data-faction attribute on <html> (see public/faction.js and src/ts/Faction.ts).
+// Alliance is the default when no faction has been chosen.
+
+:root,
+:root[data-faction="alliance"] {
+  color-scheme: dark;
+
+  // Royal blue and gold.
+  --bg00: #040a1a;
+  --bg10: #0a1631;
+  --bg15: #0f1f43;
+  --bg20: #132853;
+  --bg25: #173061;
+  --bg30: #1c3a72;
+  --bg40: #284d8f;
+
+  --text10: #f3f5fb;
+  --text20: #dfe5f3;
+  --text30: #c5cfe4;
+  --text-disabled: #7f8cab;
+
+  --heading: #f5c542;
+  --highlight-border: #ffd75e;
+  --category-hover-border: #ffd75e;
+  --category-hover-glow: #e0a91c;
+  --column-hover: #3d7bff;
+  --row-highlight: #f5c542;
+
+  --button: #1a4bb5;
+  --button-bright: #3577f0;
+  --button-text: #ffd100;
+
+  --chart-price: #ffd24d;
+  --chart-quantity: #5c9dff;
+
+  --panel-trim: #c9a23a;
+}
+
+:root[data-faction="horde"] {
+  // Blood red, black iron and bronze.
+  --bg00: #0a0302;
+  --bg10: #1b0807;
+  --bg15: #260c0a;
+  --bg20: #31100d;
+  --bg25: #3c1410;
+  --bg30: #481813;
+  --bg40: #64211a;
+
+  --text10: #f7efe9;
+  --text20: #eadbd3;
+  --text30: #d5c0b6;
+  --text-disabled: #8d7670;
+
+  --heading: #e8a43a;
+  --highlight-border: #ffb347;
+  --category-hover-border: #ff8f4d;
+  --category-hover-glow: #d0261a;
+  --column-hover: #e0301f;
+  --row-highlight: #e8a43a;
+
+  --button: #9c120a;
+  --button-bright: #dd1a0e;
+  --button-text: #ffd100;
+
+  --chart-price: #ffb347;
+  --chart-quantity: #e8483a;
+
+  --panel-trim: #b5722e;
+}
