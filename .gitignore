@@ -9,3 +9,7 @@ public/icons/
 *.gz
 *.br
 /data
+
+# Faction backdrops: third-party art, kept local until we have permission to publish
+public/images/bg-alliance.jpg
+public/images/bg-horde.jpg
