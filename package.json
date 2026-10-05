@@ -1,7 +1,7 @@
 {
   "name": "shatari-front",
   "version": "1.0.0",
-  "description": "This is the user-facing web site code for [Undermine Exchange](https://undermine.exchange), which provides historical auction pricing data for World of Warcraft.",
+  "description": "Azeroth Exchange website: World of Warcraft auction house price history. A modified version of Project Shatari's front end by Gerard Dombroski (Apache 2.0).",
   "main": "index.html",
   "scripts": {
     "dev": "vite",

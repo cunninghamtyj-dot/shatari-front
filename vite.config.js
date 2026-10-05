@@ -88,15 +88,6 @@ const serveDataDir = {
 export default defineConfig({
     plugins: [removeCSPInDev, serveJsonDir, serveDataDir],
     publicDir: 'public',
-    server: {
-        proxy: {
-            '/account': {
-                target: 'http://localhost:8011',
-                changeOrigin: true,
-                rewrite: (path) => path.replace(/^\/account/, ''),
-            }
-        }
-    },
     build: {
         outDir: 'dist',
         sourcemap: true,

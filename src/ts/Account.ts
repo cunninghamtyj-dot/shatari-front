@@ -1,21 +1,19 @@
-import {MS_HOUR} from "./constants";
+/**
+ * Account state.
+ *
+ * Azeroth Exchange has no accounts or paid tiers: every visitor gets the full feature set that Undermine Exchange
+ * reserved for paying supporters. isPaid() is kept so the original feature checks still read naturally.
+ */
+
 import Detail from "./Detail";
-import Hash from "./Hash";
-import Progress from "./Progress";
 import Search from "./Search";
-import {querySelector as qs, querySelectorAll as qsa} from "./utils";
+import {querySelector as qs} from "./utils";
 
-type User = {
-    id: string,
-    paid: boolean,
-    // UNIX timestamp, milliseconds
-    checked: number,
-}
-
-let user: User|null;
-let filterButton: HTMLAnchorElement;
 let welcomeElement: HTMLDivElement|null;
 
+/**
+ * Returns to the welcome page. (Upstream used this to advertise supporter benefits; everything is unlocked here.)
+ */
 export const showBenefitsText = (event?: MouseEvent) => {
     event && event.preventDefault();
 
@@ -27,60 +25,17 @@ export const showBenefitsText = (event?: MouseEvent) => {
     welcomeElement && welcomeElement.scrollIntoView();
 };
 
-export const isPaid = (): boolean => !!user?.paid;
+/**
+ * Every visitor has full access.
+ */
+export const isPaid = (): boolean => true;
 
 export async function init(): Promise<void> {
-    welcomeElement = qs('.welcome .account') as HTMLDivElement;
-    welcomeElement && (welcomeElement.style.display = '');
-    filterButton = qs('.main .search-bar .filter') as HTMLAnchorElement;
-    (filterButton.querySelector(':scope > div') as HTMLDivElement).addEventListener('click', () => {
-        if (!isPaid()) {
-            showBenefitsText();
-        }
-    });
+    welcomeElement = qs('.welcome') as HTMLDivElement|null;
 
-    qsa('.main .bottom-bar .account form').forEach(ele =>
-        (ele as HTMLFormElement).addEventListener('submit', () => Hash.storeInSession())
-    );
+    (qs('.main') as HTMLDivElement).dataset.account = 'paid';
 
-    (qs('.main .bottom-bar .account form.logout .red-button') as HTMLButtonElement)
-        ?.addEventListener('click', () => {
-            location.href = 'https://www.patreon.com/erorus/membership';
-        });
-
-    await updateUser();
-}
-
-async function updateUser(): Promise<void> {
-    const mainElement = qs('.main') as HTMLDivElement;
-    user = await fetchUser();
-    if (user?.id) {
-        mainElement.dataset.account = user.paid ? 'paid' : 'free';
-    } else {
-        mainElement.dataset.account = 'none';
-    }
-
-    const paid = isPaid();
-
-    filterButton.querySelectorAll(':scope > div input, :scope > div select').forEach(ele => {
-        (ele as HTMLInputElement|HTMLSelectElement).disabled = !paid;
-    });
-
-    setTimeout(updateUser, 4 * MS_HOUR);
-}
-
-async function fetchUser(): Promise<User|null> {
-    const response = await Progress.fetch('/account/user', {
-        mode: 'same-origin',
-        priority: 'high',
-        redirect: 'error',
-    });
-
-    if (!response.ok) {
-        return null;
-    }
-
-    const record = await response.json() as User;
-
-    return record?.id ? record : null;
+    (qs('.main .search-bar .filter') as HTMLAnchorElement)
+        .querySelectorAll(':scope > div input, :scope > div select')
+        .forEach(ele => (ele as HTMLInputElement|HTMLSelectElement).disabled = false);
 }

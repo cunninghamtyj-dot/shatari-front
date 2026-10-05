@@ -9,10 +9,9 @@
     <link rel="stylesheet" href="/src/scss/main.scss">
     <link rel="manifest" href="/manifest.json">
     <link rel="icon" href="/images/logo.svg" type="image/svg+xml">
-    <link rel="canonical" href="https://undermine.exchange/">
     <meta name="viewport" content="width=device-width">
     <script type="module" src="/src/ts/main.ts"></script>
-    <meta http-equiv="Content-Security-Policy" content="base-uri 'none'; default-src 'none'; frame-src https://oribos.exchange; manifest-src https://undermine.exchange; font-src https://undermine.exchange https://wow.zamimg.com; style-src https://undermine.exchange https://wow.zamimg.com; style-src-attr 'unsafe-inline'; connect-src https://undermine.exchange https://*.wowhead.com; img-src https://undermine.exchange data: https://wow.zamimg.com; script-src https://undermine.exchange">
+    <meta http-equiv="Content-Security-Policy" content="base-uri 'none'; default-src 'none'; manifest-src 'self'; font-src 'self' https://wow.zamimg.com; style-src 'self' https://wow.zamimg.com; style-src-attr 'unsafe-inline'; connect-src 'self' https://*.wowhead.com; img-src 'self' data: https://wow.zamimg.com; script-src 'self'">
 </head>
 <body>
 <div class="main">
@@ -30,8 +29,6 @@
             <div class="datalist"></div>
         </div>
         <a class="filter">Filter<div>
-            <div class="patron-text logged-out-only">For Patrons Only!</div>
-            <div class="patron-text free-only">For Patrons Only!</div>
             <span class="q">Level Range</span><br>
             <input type="number" name="level-min" maxlength="3" min="0" max="999">-<input type="number" name="level-max" maxlength="3" min="0" max="999"><br>
             <br>
@@ -125,14 +122,14 @@
                     </ol>
                 </div>
 
-                <div class="info account" style="display: none">
-                    <h2>Patron Access</h2>
+                <div class="info">
+                    <h2>Every Feature, Free</h2>
                     <div>
-                        Paying members on Patreon enjoy additional features:
+                        No accounts, no ads, no paid tiers. Everyone gets the full toolkit:
                         <ul>
                             <li>See <b>prices by item level</b> for weapons, armor, and profession equipment.</li>
                             <li>Check <b>prices by breed</b> for battle pets.</li>
-                            <li>Unlock all the options under the <b>Filter</b> button:
+                            <li>Use every option under the <b>Filter</b> button:
                                 <ul>
                                     <li>Search for items in a specific <b>level</b> or <b>rarity</b> range.</li>
                                     <li>Find items introduced in a particular <b>expansion</b>.</li>
@@ -145,42 +142,14 @@
                             <li>Search for weapons or armor with specific <b>tertiary stats</b>, via the category sidebar.</li>
                             <li><b>Rearrange the sections</b> on the pricing detail page to your preferences.</li>
                         </ul>
-                        <div class="logged-out-only">
-                            <h2>How to Sign Up</h2>
-                            To gain access to these features, please become a paid member on Patreon.<br>
-                            We ask for <b>$3.00 USD/month</b>, and there's an <b>automatic 7-day free trial</b>.
-                            <ol>
-                                <li>Click the red "<b>Sign In with Patreon</b>" in the bottom right corner of this page.</li>
-                                <li>Sign in on Patreon's website, then <b>allow access</b> to Undermine Exchange.</li>
-                                <li>Returning here, you'll click "<b>Become a Patron</b>" below, to start your membership.</li>
-                                <li>Paid members will see "Patron", and get complete access to all features.</li>
-                            </ol>
-                        </div>
-                        <div class="free-only">
-                            <h2>Become a Member</h2>
-                            To gain access to these features, please become a paid member on Patreon.<br>
-                            We ask for <b>$3.00 USD/month</b>, and there's an <b>automatic 7-day free trial</b>.
-                            <ul>
-                                <li>Please click this link to <a href="https://www.patreon.com/erorus/membership">become a patron</a>, at the Goblin tier or above.</li>
-                                <li>If you just became a paid member and still see this message:
-                                    <ol>
-                                        <li>Click the "<b>Sign Out</b>" button in the bottom right corner.</li>
-                                        <li>Then click our "<b>Sign In with Patreon</b>" button again to refresh our records.</li>
-                                    </ol>
-                                </li>
-                            </ul>
-                        </div>
-                        <div class="paid-only">
-                            <h2>Full Access Granted</h2>
-                            You are signed in with your paid membership. <b>All features are enabled.</b><br><br>
-                            Thank you for your support!
-                        </div>
                     </div>
                 </div>
 
                 <div class="welcome-bottom">
-                    <span id="contact-link"></span>
-                    Created by Erorus for players of <a href="https://worldofwarcraft.blizzard.com/" style="white-space: nowrap">World of Warcraft: Midnight</a>.
+                    Questions or issues? Email <a href="mailto:azerothex@gmail.com">azerothex@gmail.com</a>.<br>
+                    Made for players of <a href="https://worldofwarcraft.blizzard.com/" style="white-space: nowrap">World of Warcraft: Midnight</a>.
+                    Built on <a href="https://github.com/erorus/shatari-front">Project Shatari</a> by Erorus (Apache 2.0).<br>
+                    Not affiliated with Blizzard Entertainment.
                 </div>
             </div>
 
@@ -197,7 +166,6 @@
             <a href="/" class="home">Home</a>
             <a href="/terms.html">Terms</a>
             <a href="/privacy.html">Privacy</a>
-            <a href="/api.html">API</a>
         </div>
         <div class="progress">
             <div class="progress-spinner">
@@ -208,16 +176,6 @@
             </div>
         </div>
         <div class="last-updated"></div>
-        <div class="account" style="display: none">
-            <form method="POST" action="/account/login" class="login logged-out-only">
-                <button type="submit" class="red-button" data-simple-tooltip="Patrons, please sign in to enable all site features.">Sign In with Patreon</button>
-            </form>
-            <form method="POST" action="/account/logout" class="logout logged-in-only">
-                <a href="https://www.patreon.com/erorus/membership" class="paid-only" data-simple-tooltip="You're signed in with your paid membership, and all features are enabled.">Patron</a>
-                <button type="submit">Sign Out</button>
-                <button type="button" class="free-only red-button" data-simple-tooltip="Become a paid member at the Goblin tier or above to gain complete access!">Become a Patron</button>
-            </form>
-        </div>
     </div>
 </div>
 </body>

@@ -1,3 +1,13 @@
+# Azeroth Exchange - Website
+
+This is the website for **Azeroth Exchange**, a modified version of [Project Shatari - Front End](https://github.com/erorus/shatari-front) by Gerard Dombroski, used under the Apache License 2.0. Azeroth Exchange is not affiliated with or endorsed by the original project.
+
+**Changes from upstream** include: new name, logo, fonts and design with an Alliance/Horde theme switcher and city backdrops; no accounts or paid tiers (all features open to everyone, Patreon login removed); local dev server serving back-end data; new privacy and terms pages; removed Undermine/Oribos migration pages, ads.txt, the API page and unlicensed font files.
+
+The original README follows.
+
+---
+
 # Project Shatari - Front End
 
 This is the user-facing web site code for [Undermine Exchange](https://undermine.exchange), which provides historical auction pricing data for World of Warcraft.

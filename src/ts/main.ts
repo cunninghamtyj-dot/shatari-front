@@ -16,30 +16,12 @@ import {init as ItemsInit} from "./Items";
 import {init as LocalesInit} from "./Locales";
 import Realms from "./Realms";
 import Search from "./Search";
-import UndermineMigration from "./UndermineMigration";
 
 async function init() {
     const welcome = qs('.main .welcome') as HTMLElement|null;
     const inMaintenance = !!welcome?.dataset.maintenance;
     if (inMaintenance) {
         return;
-    }
-
-    if (UndermineMigration.abortInit()) {
-        return;
-    }
-
-    {
-        const toReplace = qs('#contact-link');
-        if (toReplace) {
-            const df = document.createDocumentFragment();
-            df.appendChild(document.createTextNode('Report issues to '));
-            const address = `feedback@${location.hostname}`;
-            df.appendChild(ce('a', {href: `mailto:${address}`}, document.createTextNode(address)));
-            df.appendChild(document.createTextNode('.'));
-            df.appendChild(ce('br'));
-            toReplace.parentNode?.replaceChild(df, toReplace);
-        }
     }
 
     Faction.init();
