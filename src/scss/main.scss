@@ -1727,3 +1727,30 @@ body > .wowhead-tooltip {max-width: 320px !important; width: auto !important;
     }
   }
 }
+
+// Faction city backdrop: a darkened screenshot behind the main window.
+html::before {
+  background:
+    linear-gradient(fade($background00, 0.55), fade($background00, 0.8)),
+    var(--city-image) center / cover no-repeat,
+    $background00;
+  content: "";
+  inset: 0;
+  position: fixed;
+  z-index: -1;
+}
+
+body {
+  background-color: transparent;
+}
+
+// On roomy screens, leave a frame around the main window so the city shows on every side.
+@media screen and (min-width: 1000px) and (min-height: 700px) {
+  body {
+    box-sizing: border-box;
+    padding: 24px;
+  }
+  .main {
+    height: calc(100vh - 48px);
+  }
+}

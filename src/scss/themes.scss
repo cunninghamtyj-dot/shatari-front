@@ -35,6 +35,9 @@
   --chart-quantity: #5c9dff;
 
   --panel-trim: #c9a23a;
+
+  // City backdrop behind the main window (player screenshot; optional, falls back to --bg00).
+  --city-image: url('/images/bg-alliance.jpg');
 }
 
 :root[data-faction="horde"] {
@@ -67,4 +70,6 @@
   --chart-quantity: #e8483a;
 
   --panel-trim: #b5722e;
+
+  --city-image: url('/images/bg-horde.jpg');
 }
