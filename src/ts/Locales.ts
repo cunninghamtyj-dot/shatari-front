@@ -2,7 +2,7 @@
  * Methods to handle locale changes, to show localized names and fields.
  */
 
-import {createElement as ce, querySelector as qs} from "./utils";
+import {createElement as ce, productAvailable, querySelector as qs} from "./utils";
 import Progress from "./Progress";
 import {FactionSlug, Product} from "./Types";
 import Realms from "./Realms";
@@ -220,6 +220,7 @@ async function loadGlobalStrings() {
     const locale = getCurrent();
 
     await Promise.all(Object.values(Product)
+        .filter(productAvailable)
         .map(async product => {
             const response = await Progress.fetch(`json/${product}/globalStrings.${locale}.json`, {mode: 'same-origin'});
             if (!response.ok) {
@@ -227,4 +228,7 @@ async function loadGlobalStrings() {
             }
             my.globalStrings[product] = await response.json();
         }));
+
+    // Products that are switched off may not have their data built; let them borrow mainline's strings.
+    Object.values(Product).forEach(product => my.globalStrings[product] ??= my.globalStrings[Product.Mainline]);
 }

@@ -8,3 +8,4 @@ public/data/
 public/icons/
 *.gz
 *.br
+/data
