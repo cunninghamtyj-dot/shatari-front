@@ -1731,7 +1731,7 @@ body > .wowhead-tooltip {max-width: 320px !important; width: auto !important;
 // Faction city backdrop: a darkened screenshot behind the main window.
 html::before {
   background:
-    linear-gradient(fade($background00, 0.55), fade($background00, 0.8)),
+    linear-gradient(fade($background00, 0.3), fade($background00, 0.6)),
     var(--city-image) center / cover no-repeat,
     $background00;
   content: "";
