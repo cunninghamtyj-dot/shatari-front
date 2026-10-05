@@ -136,7 +136,7 @@ const Hash = {
         newHash: string, // Must not include any initial #
         title: string,   // The page title fragment
     ) {
-        document.title = (title ? `${title} - ` : '') + 'Undermine Exchange';
+        document.title = (title ? `${title} - ` : '') + 'Azeroth Exchange';
 
         if (newHash === getHash()) {
             return;

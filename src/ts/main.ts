@@ -1,3 +1,8 @@
+import "@fontsource/cinzel/700.css";
+import "@fontsource/marcellus/400.css";
+import "@fontsource/archivo-narrow/400.css";
+import "@fontsource/archivo-narrow/700.css";
+
 import {createElement as ce, querySelector as qs, updateDeltaTimestamps} from "./utils";
 import {MS_MINUTE} from "./constants";
 

@@ -47,12 +47,13 @@ $buttonText: var(--button-text);
 $priceChart: var(--chart-price);
 $quantityChart: var(--chart-quantity);
 
-$fontArial: "Arial Narrow", sans-serif;
+$fontArial: "Archivo Narrow", "Arial Narrow", sans-serif;
 $fontSizeArial: 19px;
-$fontFriz: "Friz Quadrata TT", sans-serif;
+$fontFriz: "Marcellus", Georgia, serif;
+$fontDisplay: "Cinzel", Georgia, serif;
 $fontSizeFriz: 16px;
 
-$borderRadius: 8px;
+$borderRadius: 10px;
 $marginStep: 8px;
 $thin: 1px;
 $bevel: 2px;
@@ -115,14 +116,7 @@ $tooltipPadding: 8px;
   }
 }
 
-@font-face {
-  font-family: "Arial Narrow";
-  src: url("/fonts/arialn.ttf") format("truetype");
-}
-@font-face {
-  font-family: "Friz Quadrata TT";
-  src: url("/fonts/frizqt__.ttf") format("truetype");
-}
+// Fonts (Cinzel, Marcellus, Archivo Narrow; SIL Open Font License) are imported from @fontsource in main.ts.
 
 $scrollbarThumb: $background40;
 $scrollbarTrack: $background10;
@@ -610,7 +604,8 @@ body {
         width: 100%;
 
         h2 {
-          font: $fontSizeFriz * 1.5 $fontFriz;
+          color: $qColor;
+          font: 700 $fontSizeFriz * 1.4 $fontDisplay;
         }
       }
 
@@ -1671,4 +1666,64 @@ body > .wowhead-tooltip {max-width: 320px !important; width: auto !important;
   font-size: 75%;
 
   &:before {content: ' / '}
+}
+
+// Azeroth Exchange: brand and panel styling.
+.main {
+  border: 1px solid fade(var(--panel-trim), 0.55);
+  border-radius: 14px;
+  box-shadow: 0 0 0 1px $background00, 0 10px 40px rgba(0, 0, 0, 0.55);
+
+  .search-bar .brand {
+    align-items: center;
+    display: flex;
+    flex: 0 0 auto;
+    gap: 6px;
+    margin-right: $marginStep * 0.5;
+    text-decoration: none;
+
+    img {height: 30px; width: 30px}
+    span {
+      color: $qColor;
+      font: 700 17px $fontDisplay;
+      letter-spacing: 0.5px;
+      white-space: nowrap;
+    }
+
+    @media screen and (max-width: 1100px) {
+      span {display: none}
+    }
+    @media screen and (max-width: 700px) {
+      display: none;
+    }
+  }
+
+  .welcome {
+    .brand-hero {
+      align-items: center;
+      display: flex;
+      flex-direction: column;
+      gap: $marginStep;
+
+      img {height: 84px; width: 84px}
+    }
+
+    h1 {
+      color: $qColor;
+      font: 700 $fontSizeFriz * 2.4 $fontDisplay;
+      letter-spacing: 1px;
+    }
+
+    .tagline {
+      color: $text20;
+      font: $fontSizeFriz * 1.15 $fontFriz;
+      font-style: italic;
+    }
+
+    .info h2 {
+      color: $qColor;
+      font-family: $fontDisplay;
+      font-weight: 700;
+    }
+  }
 }

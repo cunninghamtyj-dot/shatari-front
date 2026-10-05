@@ -1,15 +1,14 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Undermine Exchange</title>
+    <title>Azeroth Exchange</title>
     <!--
         For my mother.
     -->
     <script src="/faction.js"></script>
     <link rel="stylesheet" href="/src/scss/main.scss">
     <link rel="manifest" href="/manifest.json">
-    <link rel="apple-touch-icon" sizes="45x45" href="/images/favicon/native.png" type="image/png">
-    <link rel="icon" href="/images/favicon/favicon.ico">
+    <link rel="icon" href="/images/logo.svg" type="image/svg+xml">
     <link rel="canonical" href="https://undermine.exchange/">
     <meta name="viewport" content="width=device-width">
     <script type="module" src="/src/ts/main.ts"></script>
@@ -18,6 +17,7 @@
 <body>
 <div class="main">
     <div class="search-bar">
+        <a class="brand" href="/" aria-label="Azeroth Exchange home"><img src="/images/logo.svg" alt=""><span>Azeroth Exchange</span></a>
         <select>
             <option value="">Choose a realm:</option>
         </select>
@@ -89,13 +89,13 @@
         </div>
         <div class="search-result">
             <div class="welcome">
-                <h1>Undermine Exchange</h1>
-                <div class="maintenance" style="display: none">
-                    Undermine Exchange is currently under maintenance. Please return later.
+                <div class="brand-hero">
+                    <img src="/images/logo.svg" alt="">
+                    <h1>Azeroth Exchange</h1>
+                    <div class="tagline">Know what it's worth.</div>
                 </div>
-                <div>
-                    <span style="white-space: nowrap">An augmented Auction House interface, </span>
-                    <span style="white-space: nowrap">used by the goblins of Undermine.</span>
+                <div class="maintenance" style="display: none">
+                    Azeroth Exchange is currently under maintenance. Please return later.
                 </div>
 
                 <div class="full-screen" style="display: none"><button>Use Full Screen</button></div>
@@ -106,7 +106,7 @@
                         <li><b>Select your realm</b> in the top left corner.</li>
                         <li><b>Select a category</b> (and subcategory) from the sidebar. <i>Optional.</i></li>
                         <li>Enter an <b>item name in the search text box</b> at the top. <i>Optional.</i></li>
-                        <li>Press the <b>red Search button</b> in the top right corner.</li>
+                        <li>Press the <b>Search button</b> in the top right corner.</li>
                         <li><b>Scroll through the result list</b> to find an item of interest.
                             <ul>
                                 <li>Click a column header to sort by that column.</li>
