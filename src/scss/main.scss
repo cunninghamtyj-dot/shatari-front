@@ -1669,9 +1669,24 @@ body > .wowhead-tooltip {max-width: 320px !important; width: auto !important;
 
 // Azeroth Exchange: brand and panel styling.
 .main {
-  border: 1px solid fade(var(--panel-trim), 0.55);
-  border-radius: 14px;
-  box-shadow: 0 0 0 1px $background00, 0 10px 40px rgba(0, 0, 0, 0.55);
+  // Carved stone frame: the stone texture shows only in the border; a thin gold line sits on its inner edge.
+  $frame: 16px;
+  background:
+    linear-gradient($background30, $background30) padding-box,
+    linear-gradient(var(--frame-tint), var(--frame-tint)) border-box,
+    var(--frame-image) 0 0 / 144px 64px border-box,
+    $background00;
+  border: $frame solid transparent;
+  border-radius: 6px;
+  box-shadow:
+    inset 0 0 0 1px var(--panel-trim),
+    inset 0 0 0 3px rgba(0, 0, 0, 0.45),
+    0 0 0 1px $background00,
+    0 10px 40px rgba(0, 0, 0, 0.55);
+
+  @media screen and (max-width: 999px) {
+    border-width: 5px;
+  }
 
   .search-bar .brand {
     align-items: center;

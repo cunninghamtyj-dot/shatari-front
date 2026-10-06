@@ -1,0 +1,80 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="288" height="128" viewBox="0 0 288 128">
+<!-- Azeroth Exchange: original cut-stone masonry texture for the window frame (generated). Tiles seamlessly. -->
+<defs>
+<linearGradient id="lit" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#fff" stop-opacity="0.16"/><stop offset="0.55" stop-color="#fff" stop-opacity="0"/><stop offset="1" stop-color="#000" stop-opacity="0.28"/></linearGradient>
+<filter id="grain" x="0" y="0" width="100%" height="100%"><feTurbulence type="fractalNoise" baseFrequency="0.9" numOctaves="3" seed="11" stitchTiles="stitch"/><feColorMatrix type="saturate" values="0"/><feComponentTransfer><feFuncA type="table" tableValues="0 0.5"/></feComponentTransfer></filter>
+<filter id="mottle" x="0" y="0" width="100%" height="100%"><feTurbulence type="fractalNoise" baseFrequency="0.045" numOctaves="3" seed="5" stitchTiles="stitch"/><feColorMatrix type="saturate" values="0"/><feComponentTransfer><feFuncA type="table" tableValues="0 0.32"/></feComponentTransfer></filter>
+</defs>
+<rect width="288" height="128" fill="#24231f"/>
+<rect x="-22.5" y="1.5" width="37" height="29" rx="3" fill="#7d7a73"/>
+<rect x="-22.5" y="1.5" width="37" height="29" rx="3" fill="url(#lit)"/>
+<path d="M-21.5 28.5 V3.5 Q-21.5 2.5 -20.5 2.5 H12.5" stroke="#d6d0c4" stroke-opacity="0.35" fill="none"/>
+<rect x="265.5" y="1.5" width="37" height="29" rx="3" fill="#7d7a73"/>
+<rect x="265.5" y="1.5" width="37" height="29" rx="3" fill="url(#lit)"/>
+<path d="M266.5 28.5 V3.5 Q266.5 2.5 267.5 2.5 H300.5" stroke="#d6d0c4" stroke-opacity="0.35" fill="none"/>
+<rect x="17.5" y="1.5" width="69" height="29" rx="3" fill="#77746e"/>
+<rect x="17.5" y="1.5" width="69" height="29" rx="3" fill="url(#lit)"/>
+<path d="M18.5 28.5 V3.5 Q18.5 2.5 19.5 2.5 H84.5" stroke="#d6d0c4" stroke-opacity="0.35" fill="none"/>
+<rect x="89.5" y="1.5" width="61" height="29" rx="3" fill="#8a877f"/>
+<rect x="89.5" y="1.5" width="61" height="29" rx="3" fill="url(#lit)"/>
+<path d="M90.5 28.5 V3.5 Q90.5 2.5 91.5 2.5 H148.5" stroke="#d6d0c4" stroke-opacity="0.35" fill="none"/>
+<rect x="153.5" y="1.5" width="37" height="29" rx="3" fill="#8c8678"/>
+<rect x="153.5" y="1.5" width="37" height="29" rx="3" fill="url(#lit)"/>
+<path d="M154.5 28.5 V3.5 Q154.5 2.5 155.5 2.5 H188.5" stroke="#d6d0c4" stroke-opacity="0.35" fill="none"/>
+<rect x="193.5" y="1.5" width="69" height="29" rx="3" fill="#8a877f"/>
+<rect x="193.5" y="1.5" width="69" height="29" rx="3" fill="url(#lit)"/>
+<path d="M194.5 28.5 V3.5 Q194.5 2.5 195.5 2.5 H260.5" stroke="#d6d0c4" stroke-opacity="0.35" fill="none"/>
+<rect x="-10.5" y="33.5" width="61" height="29" rx="3" fill="#6f6d68"/>
+<rect x="-10.5" y="33.5" width="61" height="29" rx="3" fill="url(#lit)"/>
+<path d="M-9.5 60.5 V35.5 Q-9.5 34.5 -8.5 34.5 H48.5" stroke="#d6d0c4" stroke-opacity="0.35" fill="none"/>
+<rect x="277.5" y="33.5" width="61" height="29" rx="3" fill="#6f6d68"/>
+<rect x="277.5" y="33.5" width="61" height="29" rx="3" fill="url(#lit)"/>
+<path d="M278.5 60.5 V35.5 Q278.5 34.5 279.5 34.5 H336.5" stroke="#d6d0c4" stroke-opacity="0.35" fill="none"/>
+<rect x="53.5" y="33.5" width="61" height="29" rx="3" fill="#6f6d68"/>
+<rect x="53.5" y="33.5" width="61" height="29" rx="3" fill="url(#lit)"/>
+<path d="M54.5 60.5 V35.5 Q54.5 34.5 55.5 34.5 H112.5" stroke="#d6d0c4" stroke-opacity="0.35" fill="none"/>
+<rect x="117.5" y="33.5" width="37" height="29" rx="3" fill="#6f6d68"/>
+<rect x="117.5" y="33.5" width="37" height="29" rx="3" fill="url(#lit)"/>
+<path d="M118.5 60.5 V35.5 Q118.5 34.5 119.5 34.5 H152.5" stroke="#d6d0c4" stroke-opacity="0.35" fill="none"/>
+<rect x="157.5" y="33.5" width="77" height="29" rx="3" fill="#807d77"/>
+<rect x="157.5" y="33.5" width="77" height="29" rx="3" fill="url(#lit)"/>
+<path d="M158.5 60.5 V35.5 Q158.5 34.5 159.5 34.5 H232.5" stroke="#d6d0c4" stroke-opacity="0.35" fill="none"/>
+<rect x="237.5" y="33.5" width="37" height="29" rx="3" fill="#807d77"/>
+<rect x="237.5" y="33.5" width="37" height="29" rx="3" fill="url(#lit)"/>
+<path d="M238.5 60.5 V35.5 Q238.5 34.5 239.5 34.5 H272.5" stroke="#d6d0c4" stroke-opacity="0.35" fill="none"/>
+<rect x="1.5" y="65.5" width="61" height="29" rx="3" fill="#918d84"/>
+<rect x="1.5" y="65.5" width="61" height="29" rx="3" fill="url(#lit)"/>
+<path d="M2.5 92.5 V67.5 Q2.5 66.5 3.5 66.5 H60.5" stroke="#d6d0c4" stroke-opacity="0.35" fill="none"/>
+<rect x="65.5" y="65.5" width="61" height="29" rx="3" fill="#7d7a73"/>
+<rect x="65.5" y="65.5" width="61" height="29" rx="3" fill="url(#lit)"/>
+<path d="M66.5 92.5 V67.5 Q66.5 66.5 67.5 66.5 H124.5" stroke="#d6d0c4" stroke-opacity="0.35" fill="none"/>
+<rect x="129.5" y="65.5" width="61" height="29" rx="3" fill="#6f6d68"/>
+<rect x="129.5" y="65.5" width="61" height="29" rx="3" fill="url(#lit)"/>
+<path d="M130.5 92.5 V67.5 Q130.5 66.5 131.5 66.5 H188.5" stroke="#d6d0c4" stroke-opacity="0.35" fill="none"/>
+<rect x="193.5" y="65.5" width="53" height="29" rx="3" fill="#85827a"/>
+<rect x="193.5" y="65.5" width="53" height="29" rx="3" fill="url(#lit)"/>
+<path d="M194.5 92.5 V67.5 Q194.5 66.5 195.5 66.5 H244.5" stroke="#d6d0c4" stroke-opacity="0.35" fill="none"/>
+<rect x="249.5" y="65.5" width="37" height="29" rx="3" fill="#807d77"/>
+<rect x="249.5" y="65.5" width="37" height="29" rx="3" fill="url(#lit)"/>
+<path d="M250.5 92.5 V67.5 Q250.5 66.5 251.5 66.5 H284.5" stroke="#d6d0c4" stroke-opacity="0.35" fill="none"/>
+<rect x="-10.5" y="97.5" width="69" height="29" rx="3" fill="#918d84"/>
+<rect x="-10.5" y="97.5" width="69" height="29" rx="3" fill="url(#lit)"/>
+<path d="M-9.5 124.5 V99.5 Q-9.5 98.5 -8.5 98.5 H56.5" stroke="#d6d0c4" stroke-opacity="0.35" fill="none"/>
+<rect x="277.5" y="97.5" width="69" height="29" rx="3" fill="#918d84"/>
+<rect x="277.5" y="97.5" width="69" height="29" rx="3" fill="url(#lit)"/>
+<path d="M278.5 124.5 V99.5 Q278.5 98.5 279.5 98.5 H344.5" stroke="#d6d0c4" stroke-opacity="0.35" fill="none"/>
+<rect x="61.5" y="97.5" width="37" height="29" rx="3" fill="#8a877f"/>
+<rect x="61.5" y="97.5" width="37" height="29" rx="3" fill="url(#lit)"/>
+<path d="M62.5 124.5 V99.5 Q62.5 98.5 63.5 98.5 H96.5" stroke="#d6d0c4" stroke-opacity="0.35" fill="none"/>
+<rect x="101.5" y="97.5" width="45" height="29" rx="3" fill="#85827a"/>
+<rect x="101.5" y="97.5" width="45" height="29" rx="3" fill="url(#lit)"/>
+<path d="M102.5 124.5 V99.5 Q102.5 98.5 103.5 98.5 H144.5" stroke="#d6d0c4" stroke-opacity="0.35" fill="none"/>
+<rect x="149.5" y="97.5" width="69" height="29" rx="3" fill="#7d7a73"/>
+<rect x="149.5" y="97.5" width="69" height="29" rx="3" fill="url(#lit)"/>
+<path d="M150.5 124.5 V99.5 Q150.5 98.5 151.5 98.5 H216.5" stroke="#d6d0c4" stroke-opacity="0.35" fill="none"/>
+<rect x="221.5" y="97.5" width="53" height="29" rx="3" fill="#85827a"/>
+<rect x="221.5" y="97.5" width="53" height="29" rx="3" fill="url(#lit)"/>
+<path d="M222.5 124.5 V99.5 Q222.5 98.5 223.5 98.5 H272.5" stroke="#d6d0c4" stroke-opacity="0.35" fill="none"/>
+<rect width="288" height="128" filter="url(#mottle)"/>
+<rect width="288" height="128" filter="url(#grain)"/>
+</svg>

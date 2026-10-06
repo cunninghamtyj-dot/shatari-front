@@ -6,35 +6,39 @@
 :root[data-faction="alliance"] {
   color-scheme: dark;
 
-  // Royal blue and gold.
-  --bg00: #040a1a;
-  --bg10: #0a1631;
-  --bg15: #0f1f43;
-  --bg20: #132853;
-  --bg25: #173061;
-  --bg30: #1c3a72;
-  --bg40: #284d8f;
+  // Stormwind: grey castle stone, gold trim, navy kept for banners (buttons).
+  --bg00: #121417;
+  --bg10: #181b1f;
+  --bg15: #1d2025;
+  --bg20: #22262b;
+  --bg25: #282c32;
+  --bg30: #2e3239;
+  --bg40: #3b414a;
 
-  --text10: #f3f5fb;
-  --text20: #dfe5f3;
-  --text30: #c5cfe4;
-  --text-disabled: #7f8cab;
+  --text10: #f2ece0;
+  --text20: #e2d9c6;
+  --text30: #c9bfa9;
+  --text-disabled: #8a8374;
 
-  --heading: #f5c542;
-  --highlight-border: #ffd75e;
-  --category-hover-border: #ffd75e;
-  --category-hover-glow: #e0a91c;
-  --column-hover: #3d7bff;
-  --row-highlight: #f5c542;
+  --heading: #d9b45a;
+  --highlight-border: #e8c66e;
+  --category-hover-border: #e8c66e;
+  --category-hover-glow: #b8892a;
+  --column-hover: #2c5292;
+  --row-highlight: #d9b45a;
 
-  --button: #1a4bb5;
-  --button-bright: #3577f0;
-  --button-text: #ffd100;
+  --button: #1f3a6b;
+  --button-bright: #2e5596;
+  --button-text: #f1d68a;
 
-  --chart-price: #ffd24d;
-  --chart-quantity: #5c9dff;
+  --chart-price: #e3bd5c;
+  --chart-quantity: #7d9cc4;
 
-  --panel-trim: #c9a23a;
+  --panel-trim: #b08d3c;
+
+  // Carved stone frame around the main window (public/images/stone.svg), tinted per faction.
+  --frame-image: url('/images/stone.svg');
+  --frame-tint: rgba(214, 200, 170, 0.12);
 
   // City backdrop behind the main window (player screenshot; optional, falls back to --bg00).
   --city-image: url('/images/bg-alliance.jpg');
@@ -70,6 +74,9 @@
   --chart-quantity: #e8483a;
 
   --panel-trim: #b5722e;
+
+  --frame-image: url('/images/stone.svg');
+  --frame-tint: rgba(90, 20, 10, 0.55);
 
   --city-image: url('/images/bg-horde.jpg');
 }
