@@ -27,7 +27,7 @@ if [[ ! -d json/realms ]]; then
 fi
 DATA="$(cd data && pwd -P)"
 
-OWNER="$(lsof -nP -iTCP:"$PORT" -sTCP:LISTEN -Fc 2>/dev/null | sed -n 's/^c//p' | head -1)"
+OWNER="$(lsof -nP -iTCP:"$PORT" -sTCP:LISTEN -Fc 2>/dev/null | sed -n 's/^c//p' | head -1 || true)"
 if [[ -n "$OWNER" && "$OWNER" != "nginx" ]]; then
     echo "Port $PORT is already used by $OWNER. Pick another: nginx/install.sh <port>" >&2
     exit 1
