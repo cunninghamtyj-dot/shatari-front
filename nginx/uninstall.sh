@@ -9,7 +9,7 @@ DEST="$BREW/etc/nginx/servers/azeroth-exchange.conf"
 if [[ -f "$DEST" ]]; then
     rm "$DEST"
     echo "Removed $DEST"
-    if pgrep -x nginx >/dev/null; then
+    if pgrep -f 'nginx: master process' >/dev/null; then
         "$BREW/bin/nginx" -s reload
         echo "Reloaded nginx."
     fi

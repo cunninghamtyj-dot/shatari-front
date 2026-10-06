@@ -23,8 +23,12 @@ server {
         try_files $uri $uri/ =404;
         expires 1h;
     }
+    # Pages: "no-transform" stops Cloudflare from injecting its analytics beacon (we promise no tracking).
     location = /index.html {
-        add_header Cache-Control "no-cache";
+        add_header Cache-Control "no-cache, no-transform";
+    }
+    location ~ \.html$ {
+        add_header Cache-Control "no-cache, no-transform";
     }
     location /assets/ {
         expires 1y;

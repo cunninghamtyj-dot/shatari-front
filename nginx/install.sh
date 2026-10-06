@@ -40,7 +40,7 @@ echo "Wrote $DEST"
 
 "$NGINX" -t
 
-if pgrep -x nginx >/dev/null; then
+if pgrep -f 'nginx: master process' >/dev/null; then
     "$NGINX" -s reload
     echo "Reloaded nginx."
 else
