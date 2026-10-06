@@ -76,6 +76,6 @@ function updateButton() {
         return;
     }
     const other = getCurrent() === Faction.Horde ? 'Alliance' : 'Horde';
-    button.dataset.simpleTooltip = `For the ${getCurrent() === Faction.Horde ? 'Horde' : 'Alliance'}! Click to switch to ${other} colors.`;
+    button.dataset.simpleTooltip = `Switch to ${other} colors`;
     button.setAttribute('aria-label', `Switch to ${other} colors`);
 }

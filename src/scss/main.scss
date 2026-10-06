@@ -328,15 +328,16 @@ body {
           background-image: url('/images/favorite-star.png');
         }
       }
+      // Shows the other faction's crest: the one you'd switch to.
       &.faction {
-        background-image: url('/images/faction-alliance.svg');
+        background-image: url('/images/faction-horde.svg');
         background-position: center center;
         background-repeat: no-repeat;
         background-size: calc(100% - 4px);
         cursor: pointer;
 
         :root[data-faction="horde"] & {
-          background-image: url('/images/faction-horde.svg');
+          background-image: url('/images/faction-alliance.svg');
         }
       }
       &.deals {
@@ -1669,14 +1670,15 @@ body > .wowhead-tooltip {max-width: 320px !important; width: auto !important;
 
 // Azeroth Exchange: brand and panel styling.
 .main {
-  // Carved stone frame: the stone texture shows only in the border; a thin gold line sits on its inner edge.
-  $frame: 16px;
+  // Faction frame (see themes.scss). Alliance: carved stone texture showing only in the border.
+  // Horde: splintered posts and iron-banded planks drawn over the border with border-image. A thin trim line sits on the inner edge.
   background:
     linear-gradient($background30, $background30) padding-box,
     linear-gradient(var(--frame-tint), var(--frame-tint)) border-box,
     var(--frame-image) 0 0 / 144px 64px border-box,
     $background00;
-  border: $frame solid transparent;
+  border: var(--frame-width) solid transparent;
+  border-image: var(--frame-border-image);
   border-radius: 6px;
   box-shadow:
     inset 0 0 0 1px var(--panel-trim),

@@ -39,6 +39,8 @@
   // Carved stone frame around the main window (public/images/stone.svg), tinted per faction.
   --frame-image: url('/images/stone.svg');
   --frame-tint: rgba(214, 200, 170, 0.12);
+  --frame-border-image: none;
+  --frame-width: 16px;
 
   // City backdrop behind the main window (player screenshot; optional, falls back to --bg00).
   --city-image: url('/images/bg-alliance.jpg');
@@ -75,8 +77,11 @@
 
   --panel-trim: #b5722e;
 
-  --frame-image: url('/images/stone.svg');
-  --frame-tint: rgba(90, 20, 10, 0.55);
+  // Orgrimmar: rough splintered posts and iron-banded planks (public/images/wood-frame.svg, 9-slice; the spikes poke out past the window).
+  --frame-image: none;
+  --frame-tint: transparent;
+  --frame-border-image: url('/images/wood-frame.svg') 128 / 2.06 / 0.55 stretch;
+  --frame-width: 30px;
 
   --city-image: url('/images/bg-horde.jpg');
 }
