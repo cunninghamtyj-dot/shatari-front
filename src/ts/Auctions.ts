@@ -148,6 +148,13 @@ const Auctions = {
     },
 
     /**
+     * Return the given realm's state, without touching the page (used by the Flip Finder to compare realms).
+     */
+    async getRealmStateFor(realm: Types.Realm): Promise<Types.RealmState> {
+        return getRealmState(realm);
+    },
+
+    /**
      * Return the current realm's state. May return a cached object shared between calls.
      */
     async getRealmState(): Promise<Types.RealmState> {

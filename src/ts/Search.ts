@@ -14,6 +14,7 @@ import {isPaid, showBenefitsText} from "./Account";
 import Auctions from "./Auctions";
 import Categories, {DetailColumn} from "./Categories";
 import Detail from "./Detail";
+import Flips from "./Flips";
 import Hash from "./Hash";
 import * as Items from "./Items";
 import {getWowheadDomain, getProductGlobalStrings, GlobalString} from "./Locales";
@@ -102,6 +103,7 @@ const Search = {
         });
 
         qs('.main .search-bar .deals')?.addEventListener('click', () => Search.perform(false, true));
+        qs('.main .search-bar .flips')?.addEventListener('click', () => Search.perform(false, false, true));
 
         try {
             getRegionMedianControl().checked = !!localStorage.getItem('show-region-median');
@@ -137,7 +139,7 @@ const Search = {
         };
         document.addEventListener('keyup', copyNameToClipboard);
 
-        qs('.main .search-bar button.search')?.addEventListener('click', Search.perform.bind(null, false, false));
+        qs('.main .search-bar button.search')?.addEventListener('click', () => Search.perform(false, false));
         const searchBox = qs('.main .search-bar input[type="text"]') as HTMLInputElement;
         searchBox.addEventListener('keyup', event => {
             if (event.key === 'Enter') {
@@ -161,7 +163,7 @@ const Search = {
     /**
      * Perform a search for items, reading the parameters from the UI.
      */
-    async perform(favoritesOnly: boolean, dealsOnly: boolean) {
+    async perform(favoritesOnly: boolean, dealsOnly: boolean, flipsOnly: boolean = false) {
         if (Categories.getClassId() === Items.ItemClass.WowToken) {
             // Get out of WoW Token mode before performing any searches.
             qs('.main .categories .category[data-class-id="' + Items.ItemClass.WowToken + '"]')?.dispatchEvent(new MouseEvent('click'));
@@ -191,12 +193,23 @@ const Search = {
         let searchTypeName = 'search';
         if (favoritesOnly) searchTypeName = 'favorites';
         if (dealsOnly) searchTypeName = 'deals';
+        if (flipsOnly) searchTypeName = 'flips';
         my.hash = Hash.getSearchHash(searchTypeName);
         my.hashRealm = thisRealm;
         Search.setHash();
 
         const searchBox = qs('.main .search-bar input[type="text"]') as HTMLInputElement;
         const hasSearchText = /\S/.test(searchBox.value);
+
+        if (flipsOnly) {
+            // Azeroth Exchange: Flip Finder compares the visitor's chosen realms (see Flips.ts).
+            await Flips.perform(
+                await Items.search(Items.SearchMode.Normal),
+                () => Search.perform(false, false, true),
+            );
+
+            return;
+        }
 
         let itemsList = await Auctions.hydrateList(
             await Items.search(favoritesOnly ? Items.SearchMode.Favorites : Items.SearchMode.Normal),

@@ -2,7 +2,7 @@
 
 This is the website for **Azeroth Exchange**, a modified version of [Project Shatari - Front End](https://github.com/erorus/shatari-front) by Gerard Dombroski, used under the Apache License 2.0. Azeroth Exchange is not affiliated with or endorsed by the original project.
 
-**Changes from upstream** include: new name, logo, fonts and design with an Alliance/Horde theme switcher and city backdrops; no accounts or paid tiers (all features open to everyone, Patreon login removed); local dev server serving back-end data; new privacy and terms pages; removed Undermine/Oribos migration pages, ads.txt, the API page and unlicensed font files.
+**Changes from upstream** include: new name, logo, fonts and design with an Alliance/Horde theme switcher and city backdrops; no accounts or paid tiers (all features open to everyone, Patreon login removed); local dev server serving back-end data; new privacy and terms pages; removed Undermine/Oribos migration pages, ads.txt, the API page and unlicensed font files. Added a Flip Finder (not in upstream): compares the realms a visitor picks and lists non-stackable items that are cheap on one and sell for more on another (`src/ts/Flips.ts`).
 
 The original README follows.
 

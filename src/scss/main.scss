@@ -346,6 +346,12 @@ body {
         background-repeat: no-repeat;
         background-size: calc(100% - 4px);
       }
+      &.flips {
+        background-image: url('/images/flips.svg');
+        background-position: center center;
+        background-repeat: no-repeat;
+        background-size: calc(100% - 6px);
+      }
       &.small-button {
         flex: 0 0 auto;
         width: 2em;
@@ -1768,5 +1774,81 @@ body {
   }
   .main {
     height: calc(100vh - 48px);
+  }
+}
+
+// Azeroth Exchange: Flip Finder (src/ts/Flips.ts).
+.main .search-result {
+  .flip-settings {
+    background: $background20;
+    border-bottom: $thin solid $background30;
+    font: $fontSizeFriz * 0.9 $fontFriz;
+    padding: math.div($marginStep, 2) $marginStep;
+
+    .flip-edit {color: $qColor; white-space: nowrap}
+    .flip-editor {
+      margin-top: $marginStep;
+      p {color: $text30; margin: 0 0 $marginStep}
+      .flip-filter {box-sizing: border-box; margin-bottom: $marginStep; width: 100%}
+      .flip-realm-list {
+        background: $background10;
+        border: $thin solid $background30;
+        columns: 16em auto;
+        max-height: 14em;
+        overflow-y: auto;
+        padding: math.div($marginStep, 2);
+        label {break-inside: avoid; display: block; white-space: nowrap; overflow: hidden; text-overflow: ellipsis}
+        label[hidden] {display: none}
+      }
+      .flip-minimums {
+        display: flex;
+        flex-wrap: wrap;
+        gap: $marginStep * 2;
+        margin: $marginStep 0;
+        input {width: 6em}
+      }
+      button {
+        background: $buttonRed;
+        border: $thin solid $highlightBorderColor;
+        border-radius: math.div($borderRadius, 2);
+        color: $buttonText;
+        cursor: pointer;
+        font: $fontSizeFriz $fontFriz;
+        padding: math.div($marginStep, 2) $marginStep * 1.5;
+        &:hover {background: $buttonRedBright}
+      }
+    }
+  }
+
+  .flip-intro {
+    color: $text20;
+    font-size: 110%;
+    padding: $marginStep * 2;
+    text-align: center;
+  }
+
+  table.flips {
+    td.name {width: 40%}
+    td.flip-price, td.flip-profit {text-align: right; white-space: nowrap}
+    td.flip-price .flip-realm {color: $text30; font-size: 75%}
+    td.flip-profit {color: $priceChart}
+    td.flip-margin {padding-right: 1em; text-align: right}
+    .flip-note {
+      border: $thin solid $text30;
+      border-radius: 4px;
+      font-size: 85%;
+      margin-left: 0.4em;
+      padding: 0 0.3em;
+    }
+
+    // Phones: the item name gets its own line, with buy / sell / profit underneath; margin is hidden.
+    @media screen and (max-width: 750px) {
+      thead tr, tbody tr.result {display: grid; grid-template-columns: repeat(3, minmax(0, 1fr))}
+      thead td[data-col-name="name"], thead td[data-col-name="margin"] {display: none}
+      tbody tr.result {border-bottom: $thin solid $background30}
+      tbody tr.result td {padding: 2px 4px}
+      tbody tr.result td.name {grid-column: 1 / -1; max-width: none; width: auto}
+      tbody tr.result td.flip-margin {display: none}
+    }
   }
 }

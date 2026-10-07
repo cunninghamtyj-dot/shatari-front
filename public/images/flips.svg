@@ -1,0 +1,11 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64">
+  <!-- Azeroth Exchange: Flip Finder icon (original). Two arrows trading places. -->
+  <g fill="none" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M14 26 C 18 13, 40 9, 50 20" stroke="#3a2a0c" stroke-width="10"/>
+    <path d="M50 38 C 46 51, 24 55, 14 44" stroke="#3a2a0c" stroke-width="10"/>
+    <path d="M14 26 C 18 13, 40 9, 50 20" stroke="#e8c15a" stroke-width="6"/>
+    <path d="M50 38 C 46 51, 24 55, 14 44" stroke="#e8c15a" stroke-width="6"/>
+  </g>
+  <path d="M41 21 L55 25 L53 10 Z" fill="#e8c15a" stroke="#3a2a0c" stroke-width="2.5" stroke-linejoin="round"/>
+  <path d="M23 43 L9 39 L11 54 Z" fill="#e8c15a" stroke="#3a2a0c" stroke-width="2.5" stroke-linejoin="round"/>
+</svg>

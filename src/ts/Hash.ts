@@ -296,7 +296,7 @@ async function performSearch(
 
     (qs('.main .search-bar input[type="text"]') as HTMLInputElement).value = searchText;
 
-    await Search.perform(searchType === 'favorites', searchType === 'deals');
+    await Search.perform(searchType === 'favorites', searchType === 'deals', searchType === 'flips');
 }
 
 /**
@@ -339,6 +339,7 @@ const read = async function (): Promise<boolean> {
         case 'search':
         case 'favorites':
         case 'deals':
+        case 'flips':
             await performSearch(hashParts[1], hashParts.slice(2));
 
             return true;
