@@ -1,0 +1,136 @@
+/* Azeroth Exchange: styles for the static pages (privacy.html, terms.html).
+   Colors and frames match src/scss/themes.scss; /faction.js sets data-faction from the visitor's saved choice. */
+
+@font-face {
+    font-family: "Cinzel";
+    font-weight: 700;
+    font-display: swap;
+    src: url("/fonts/cinzel-latin-700-normal.woff2") format("woff2");
+}
+@font-face {
+    font-family: "Marcellus";
+    font-weight: 400;
+    font-display: swap;
+    src: url("/fonts/marcellus-latin-400-normal.woff2") format("woff2");
+}
+
+:root,
+:root[data-faction="alliance"] {
+    color-scheme: dark;
+    /* Stormwind: grey castle stone, gold trim, navy banners. */
+    --page-bg: #121417;
+    --panel: #2e3239;
+    --panel-inset: #22262b;
+    --text: #e2d9c6;
+    --text-muted: #c9bfa9;
+    --heading: #d9b45a;
+    --link: #e8c66e;
+    --trim: #b08d3c;
+    --frame-image: url("/images/stone.svg") 0 0 / 144px 64px;
+    --frame-tint: rgba(214, 200, 170, 0.12);
+    --frame-border-image: none;
+    --frame-width: 16px;
+}
+
+:root[data-faction="horde"] {
+    /* Orgrimmar: blood red, black iron and bronze, in a timber frame. */
+    --page-bg: #0a0302;
+    --panel: #31100d;
+    --panel-inset: #260c0a;
+    --text: #eadbd3;
+    --text-muted: #d5c0b6;
+    --heading: #e8a43a;
+    --link: #ffb347;
+    --trim: #b5722e;
+    --frame-image: none;
+    --frame-tint: transparent;
+    --frame-border-image: url("/images/wood-frame.svg") 128 / 2.06 / 0.55 stretch;
+    --frame-width: 30px;
+}
+
+body {
+    background: var(--page-bg);
+    color: var(--text);
+    font: 17px/1.65 Georgia, "Times New Roman", serif;
+    margin: 0;
+    padding: 32px 20px;
+}
+
+main {
+    background:
+        linear-gradient(var(--panel), var(--panel)) padding-box,
+        linear-gradient(var(--frame-tint), var(--frame-tint)) border-box,
+        var(--frame-image) border-box,
+        var(--page-bg);
+    border: var(--frame-width) solid transparent;
+    border-image: var(--frame-border-image);
+    border-radius: 6px;
+    box-shadow:
+        inset 0 0 0 1px var(--trim),
+        inset 0 0 0 3px rgba(0, 0, 0, 0.45),
+        0 10px 40px rgba(0, 0, 0, 0.55);
+    margin: 0 auto;
+    max-width: 46em;
+    padding: 28px 40px 32px;
+}
+
+.brand {
+    align-items: center;
+    display: inline-flex;
+    gap: 10px;
+    margin-bottom: 20px;
+    text-decoration: none;
+}
+.brand img {height: 38px; width: 38px}
+.brand span {
+    color: var(--heading);
+    font: 700 19px "Cinzel", Georgia, serif;
+    letter-spacing: 0.5px;
+}
+
+h1, h2 {
+    color: var(--heading);
+    line-height: 1.25;
+}
+h1 {
+    border-bottom: 1px solid var(--trim);
+    font: 700 30px "Cinzel", Georgia, serif;
+    letter-spacing: 0.5px;
+    margin: 0 0 6px;
+    padding-bottom: 10px;
+}
+h2 {
+    font: 400 22px "Marcellus", Georgia, serif;
+    margin: 1.8em 0 0.5em;
+}
+
+a {color: var(--link)}
+b {color: #fff3dc}
+:root[data-faction="horde"] b {color: #fff0e6}
+ul {padding-left: 1.3em}
+li {margin-bottom: 0.4em}
+
+.updated {
+    color: var(--text-muted);
+    font-style: italic;
+    margin-top: 0;
+}
+
+code {
+    background: var(--panel-inset);
+    border-radius: 4px;
+    padding: 0 5px;
+}
+
+.back {
+    border-top: 1px solid var(--trim);
+    margin-top: 2em;
+    padding-top: 1em;
+}
+
+@media screen and (max-width: 700px) {
+    body {font-size: 16px; padding: 12px 8px}
+    main {border-width: 5px; padding: 18px 18px 22px}
+    h1 {font-size: 24px}
+    h2 {font-size: 19px}
+}
