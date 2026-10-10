@@ -1,0 +1,16 @@
+# Azeroth Exchange website in Docker (nginx only). Data collection stays native on the Mac (shatari/launchd).
+# Run `npm run build` first. Default port 8420 (what the Cloudflare Tunnel points at); override with PORT=8421.
+# Assumes shatari/ and shatari-front/ sit side by side, as in ~/WoWTracker.
+services:
+  web:
+    image: nginx:1.27-alpine
+    container_name: azeroth-exchange-web
+    restart: unless-stopped
+    ports:
+      - "${PORT:-8420}:80"
+    volumes:
+      - ./docker/default.conf:/etc/nginx/conf.d/default.conf:ro
+      - ./dist:/srv/dist:ro
+      - ./json:/srv/json:ro
+      - ../shatari/realms:/srv/realms:ro
+      - ../shatari/data:/srv/data:ro

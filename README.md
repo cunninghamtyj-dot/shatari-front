@@ -69,3 +69,7 @@ distributed under the License is distributed on an "AS IS" BASIS,
 WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License.
+
+## Running the site in Docker (Azeroth Exchange change)
+
+`docker-compose.yml` runs the built site (`dist/`) in an nginx container on port 8420 (`PORT=...` to change). It expects `shatari/` next to this folder. Run `npm run build`, then `docker compose up -d`. `docker/default.conf` is the container's nginx config (same rules as `nginx/azeroth-exchange.conf.template`, which is for a native Homebrew nginx).
